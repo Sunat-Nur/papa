@@ -13,10 +13,8 @@ const router = require("./router");
 //     }
 // })
 
-// MongoDB call
 
-const db = require("./server").db();
-const mongodb = require("mongodb");
+
 
 //1: Kirish code
 app.use(express.static("public"));
