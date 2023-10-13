@@ -9,7 +9,7 @@ const connectionString =
 mongodb.connect(
     connectionString,
     {
-        useNewUrlParser: true,
+        useNewUrlParsgit merer: true,
         useUnifiedTopology: true,
     },
     (err, client) => {
