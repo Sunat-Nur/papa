@@ -1,25 +1,27 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
+
 const http = require( "http");
-const mongodb = require("mongodb");
+const mongoose = require("mongoose").default;
+const connectionString = process.env.MONGO_URL;
+mongoose.set('strictQuery', false);
 
-let db;
-const connectionString =
 
-    "mongodb+srv://sunat_nur:BEnjw9gLBogakNv4@cluster0.zkawn2h.mongodb.net/Reja"
-
-mongodb.connect(
+mongoose.connect(
     connectionString,
     {
         useNewUrlParsgit merer: true,
         useUnifiedTopology: true,
     },
-    (err, client) => {
+    (err, goose) => {
         if(err) console.log("ERROR on connection MongoDB ");
         else {
-            console.log("Mongo connection succeed");
-            module.exports = client;
+            console.log("Mongodb connection succeed");
+         //   console.log(goose);
             const app = require("./app");
             const server = http.createServer(app);
-            let PORT = 3000;
+            let PORT = process.env.PORT || 3002;
             server.listen(PORT, function() {
                 console.log(
                     `the server is running successfully on port: ${PORT}, http://localhost:${PORT}`);

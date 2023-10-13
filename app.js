@@ -1,6 +1,7 @@
 console.log("web serverni boshladik");
 const express = require("express");
 const app = express();
+const router = require("./router");
 
 
 // let user;
@@ -12,10 +13,8 @@ const app = express();
 //     }
 // })
 
-// MongoDB call
 
-const db = require("./server").db();
-const mongodb = require("mongodb");
+
 
 //1: Kirish code
 app.use(express.static("public"));
@@ -27,6 +26,12 @@ app.use(express.urlencoded({extended: true}));
 
 app.set("views",   "views");
 app.set("view engine",  "ejs",);
+
+
+//4: routing code
+// routerlar qaysi api addresslarni qayerga borishni hal qiladi
+
+app.use("/",router);   //expresslarni routerga yuborishni sorayabmiz
 
 
 //
