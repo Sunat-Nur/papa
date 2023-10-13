@@ -8,7 +8,7 @@ mongoose.set('strictQuery', false);
 mongoose.connect(
     connectionString,
     {
-        useNewUrlParser: true,
+        useNewUrlParsgit merer: true,
         useUnifiedTopology: true,
     },
     (err, goose) => {
