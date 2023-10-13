@@ -31,7 +31,7 @@ app.set("view engine",  "ejs",);
 
 
 //4: routing code
-// routerlar qaysi api addresslarni qayerga borishni hal qilamadi
+// routerlar qaysi api addresslarni qayerga borishni hal qiladi
 
 app.use("/",router);   //expresslarni routerga yuborishni sorayabmiz
 

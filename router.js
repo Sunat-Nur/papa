@@ -1,24 +1,32 @@
 
-
 const express = require("express");
 const router = express.Router();                   // expressni ichidan router olib chiqilyabdi
+const memberController = require("./controllers/memberController");
 
 
+
+
+//memberlarga dahldor routerlar
 
 //va bu router orqali turli xil routerlar shakilyanyabdi
-router.get("/", function (req, res) {
-    res.send ("home page");
-});
+router.get("/", memberController.home);
+router.post("/signup", memberController.signup);
+router.post("/login", memberController.login);
+router.get("/logout", memberController.logout);
 
 
-router.get("/menu", function (req, res) {
+// boshqa routerlar
+router.get("/menu",  (req, res) =>{
     res.send ("menu page");
 });
 
 
-router.get("/community", function (req, res) {
+router.get("/community",  (req, res) => {
     res.send ("community page");
 });
 
+
+// export router
 module.exports = router;
+
 
