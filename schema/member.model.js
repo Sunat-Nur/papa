@@ -42,6 +42,9 @@ const memberSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    mb_description: {
+        type: String, required: false
+    },
     mb_image: {
         type: String,
         required: false
@@ -50,7 +53,37 @@ const memberSchema = new mongoose.Schema({
         type: Number,
         required: false,
         default: 0
-    }
+    },
+    mb_top: {
+        type: String,
+        required: false,
+        default: "N",
+        enum: {
+            values: ordernary_enums,
+            message: "{VALUE} is not among permitted values "
+        }
+    },
+    mb_views: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    mb_likes: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    mb_follow_cnt: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    mb_subscriber_cnt: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+   //{timestamps: true}  updatedAt, createdAt
 
 });
 

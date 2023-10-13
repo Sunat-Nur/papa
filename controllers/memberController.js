@@ -1,4 +1,3 @@
-
 // object yasalib uni modulening ichidagi exportga tenglashtirilyabdi
 let memberController = module.exports;
 
