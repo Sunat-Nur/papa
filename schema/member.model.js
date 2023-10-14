@@ -85,6 +85,6 @@ const memberSchema = new mongoose.Schema({
     },
    //{timestamps: true}  updatedAt, createdAt
 
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model("Member", memberSchema);
