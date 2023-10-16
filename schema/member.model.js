@@ -16,7 +16,7 @@ const memberSchema = new mongoose.Schema({
     },
     mb_password: {
         type: String,
-        required: false,
+        required: true,
         select: false  // password ko'rinmasligi uchun
     },
     mb_type: {

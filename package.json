@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "assert": "^2.0.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.8",
     "enum": "^3.0.4",
