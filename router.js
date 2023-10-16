@@ -9,7 +9,6 @@ const memberController = require("./controllers/memberController");
 //memberlarga dahldor routerlar
 
 //va bu router orqali turli xil routerlar shakilyanyabdi
-router.get("/", memberController.home);
 router.post("/signup", memberController.signup);
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);

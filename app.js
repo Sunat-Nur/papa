@@ -31,7 +31,8 @@ app.set("view engine",  "ejs",);
 //4: routing code
 // routerlar qaysi api addresslarni qayerga borishni hal qiladi
 
-app.use("/",router);   //expresslarni routerga yuborishni sorayabmiz
+//app.use("/resto", router_bssr);  // ananviy// faqat admin va restarunt userlar uchun ishlatiladi
+app.use("/",router);   //request larni routerga yuborishni sorayabmiz. React shaklda single page aplication
 
 
 //
