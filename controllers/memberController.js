@@ -11,19 +11,32 @@ memberController.signup = async (req, res ) => {
     try {
         console.log("POST: cont/signup");
         const data = req.body;
-        const member = new Member();
-        const  new_member = await member.signupData(data);   //ichida request body yuborilyabdi
+        member = new Member();
+        new_member = await member.signupData(data);   //ichida request body yuborilyabdi
 
-        res.send("done");
+        res.json({state: 'success', data: new_member});
     }
     catch(err){
         console.log(`ERROR, cont/signup, ${err.message}`)
+        res.json({state: "fail", message: err.message});
     }
 };
 
-memberController.login = (req, res ) => {
-    console.log("POST cont.login");
-    res.send("login page");
+memberController.login = async (req, res ) => {
+    try {
+        console.log("POST: cont/login");
+        const data = req.body;
+        member = new Member();
+        result = await member.loginData(data);   //ichida request body yuborilyabdi
+
+        res.json({state: 'success', data: result});
+    }
+    catch(err){
+        console.log(`ERROR, cont/login, ${err.message}`)
+        res.json({state: "fail", message: err.message});
+    }
+
+
 };
 
 memberController.logout = (req, res ) => {
