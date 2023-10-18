@@ -2,6 +2,7 @@ console.log("web serverni boshladik");
 const express = require("express");
 const app = express();
 const router = require("./router");
+const router_bssr = require("./router_bssr");
 
 
 // let user;
@@ -12,9 +13,6 @@ const router = require("./router");
 //         user = JSON.parse(data)
 //     }
 // })
-
-
-
 
 //1: Kirish code
 app.use(express.static("public"));
@@ -31,8 +29,8 @@ app.set("view engine",  "ejs",);
 //4: routing code
 // routerlar qaysi api addresslarni qayerga borishni hal qiladi
 
-//app.use("/resto", router_bssr);  // ananviy// faqat admin va restarunt userlar uchun ishlatiladi
-app.use("/",router);   //request larni routerga yuborishni sorayabmiz. React shaklda single page aplication
+app.use("/resto", router_bssr);  // ananviy// faqat admin va restarunt userlar uchun ishlatiladi
+app.use("/",router);               //request larni routerga yuborishni sorayabmiz. React shaklda single page aplication
 
 
 //

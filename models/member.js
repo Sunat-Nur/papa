@@ -26,7 +26,7 @@ class Member {
                 throw new Error(Definer.auth_err1); //o'izmiz xoxlagan errorni hosil qilyabmiz
 
             }
-            result.mb_password = ""; //passwordni stringcleara o'zgarturyabmiz
+            result.mb_password = ""; //passwordni stringa o'zgarturyabmiz, parolni ko'rmaslik uchun
             return result;
         } catch (err){
              throw err;
@@ -35,13 +35,13 @@ class Member {
 
     async loginData(input) {                  //input qismidi mb_name/password qismi keladi
         try {
-           const member = await this.memberModel
+           const member = await this.memberModel // member schema modeldan
                .findOne(
                    {mb_nick: input.mb_nick},
-                   { mb_nick: 1, mb_password: 1})
+                   { mb_nick: 1, mb_password: 1})  // 0 va 1 buyog'da majburlab chaqiryabdi forced chaqirish..
                .exec();
 
-           assert.ok(member, Definer.auth_err2);
+           assert.ok(member, Definer.auth_err2); // auth_err static method
 
            const isMatch = await bcrypt.compare(
                input.mb_password,
@@ -51,7 +51,7 @@ class Member {
 
            return await this.memberModel
                .findOne({mb_nick: input.mb_nick})
-               .exec()
+               .exec() // to'xtat degan ma'nosi
 
         } catch (err){
             throw err;
