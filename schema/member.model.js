@@ -1,20 +1,23 @@
 const mongoose = require("mongoose");
-const {member_status_enums, member_type_enums} = require("../lib/config");
+const {member_status_enums, member_type_enums, ordernary_enums} = require("../lib/config");
 
 const memberSchema = new mongoose.Schema({
+    // mongoose ni ichidan schema olinyabdi
+    // schema validation ham hisoblanadi
     mb_nick: {
         type: String,
         required: true,
-        index: {unique: true, sparse: false}
+        index: {unique: true, sparse: true}
     },
     mb_phone: {
         type: String,
-        required: true
+        required: true,
+        index: {unique: true, sparse: true}
     },
     mb_password: {
         type: String,
         required: true,
-        select: false
+        select: false  // password ko'rinmasligi uchun
     },
     mb_type: {
         type: String,
@@ -88,3 +91,13 @@ const memberSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 module.exports = mongoose.model("Member", memberSchema);
+
+
+
+/*
+schemani ikki xil usulda qurish mumkin
+
+code based -- schema based
+code first method --- schema first
+
+ */
