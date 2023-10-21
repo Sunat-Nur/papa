@@ -5,14 +5,12 @@ const router = require("./router");
 const router_bssr = require("./router_bssr");
 
 
-// let user;
-// fs.readFile("database/user.json", "utf8",(err, data) => {
-//     if(err) {
-//         console.log("ERROR:", err);
-//     } else {
-//         user = JSON.parse(data)
-//     }
-// })
+let session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session") (session);  // mongodbni storegeni hosil qib berishda yordam beradi
+const store = new MongoDBStore({          // mongodbstore orqali object yasab olinyabdi
+    uri: process.env.MONGO_URL,                         //mongo atlas qismidagi url olib berilyabdi
+    collection: "session",                   // collectioni nomini session deyabmiz va shu nom bilan session collectioni hosil boladi
+});
 
 //1: Kirish code
 app.use(express.static("public"));
@@ -20,6 +18,25 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // 2: Session code
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,  //sessionda secret code yozilyabdi
+        cookie: {
+            maxAge: 1000 * 60 * 30, // for 30 minutes
+            // qancha vaqt uchun deb beryabmiz
+        },
+        store: store,  // store qayerda saqlanishini beryabmiz
+        resave: true,
+        saveUninitialized: true,
+    })
+);
+
+app.use(function (req, res,next ) {
+    res.locals.member = req.session.member;        //har bir keladigan request  ucun ushubi mantiq
+    next();                                        // respns local memberni ichida session memberni yukala deyabmiz
+
+})
 // 3: Views code
 
 app.set("views",   "views");
@@ -29,13 +46,9 @@ app.set("view engine",  "ejs",);
 //4: routing code
 // routerlar qaysi api addresslarni qayerga borishni hal qiladi
 
-app.use("/resto", router_bssr);  // ananviy// faqat admin va restarunt userlar uchun ishlatiladi
-app.use("/",router);               //request larni routerga yuborishni sorayabmiz. React shaklda single page aplication
+app.use("/resto", router_bssr);       // ananviy// faqat admin va restarunt userlar uchun ishlatiladi
+app.use("/",router);                   // modern   EJS, ASPA request larni routerga yuborishni sorayabmiz.
+// React shaklda single page aplication
 
-
-//
-// app.get('/author', (req, res) => {
-//     res.render('author', {user: user})
-// })
 
 module.exports = app;

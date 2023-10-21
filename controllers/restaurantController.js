@@ -7,6 +7,22 @@
 const Member = require("../models/member");
 let restaurantController = module.exports;
 
+
+
+restaurantController.getMyRestaurantData = async (req, res) => {
+    try {
+        console.log("GET: cont/getSignupMyRestaurant");
+        // TODO get my restaurant products
+
+        res.render("restaurant-menu");
+    } catch(err) {
+        console.log(`ERROR: cont/getMyRestaurantData, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+}
+
+
+
 restaurantController.getSignupMyRestaurant = async (req, res) => {
    try {
        console.log("GET: cont/getSignupMyRestaurant");
@@ -18,13 +34,17 @@ restaurantController.getSignupMyRestaurant = async (req, res) => {
 }
 
 
-
 restaurantController.signupProcess = async (req, res ) => {
     try {
-        console.log("POST: cont/signup");
-        const data = req.body;
-        member = new Member();  // member service modeldan instance olinyabdi
-        new_member = await member.signupData(data);   //ichida request body yuborilyabdi
+        console.log("POST: cont/signup process");
+        const data = req.body,
+            member = new Member(),  // member service modeldan instance olinyabdi
+            new_member = await member.signupData(data);   //ichida request body yuborilyabdi
+
+        req.session.member = new_member;
+        req.session.save(function () {     //login bolgandan ken qaysi page ga borishi mumkinligini korsatyabmiz
+            res.redirect("/resto/products/menu");
+        });
 
         res.json({state: 'success', data: new_member});
     }
@@ -33,6 +53,7 @@ restaurantController.signupProcess = async (req, res ) => {
         res.json({state: "fail", message: err.message});
     }
 };
+
 
 restaurantController.getLoginMyRestaurant = async (req, res ) => {
     try {
@@ -43,23 +64,34 @@ restaurantController.getLoginMyRestaurant = async (req, res ) => {
         res.json({state: "fail", message: err.message});
     }
 };
-
 restaurantController.loginProcess = async (req, res ) => {
     try {
-        console.log("POST: cont/login");
-        const data = req.body;
-        member = new Member();  // member service modeldan instance olinyabdi
-        new_member = await member.loginData(data);   //ichida request body yuborilyabdi
-
-        res.json({state: 'success', data: new_member});
+        console.log("POST: cont/login process");
+        const data = req.body,
+            member = new Member();   //ichida request body yuborilyabdi
+        req.session.member = await member.loginData(data);
+        req.session.save(function () {     //login bolgandan ken qaysi page ga borishi mumkinligini korsatyabmiz
+            res.redirect("/resto/products/menu");
+        });
     }
-    catch(err){           // xatoni ushlassh uchun try catch dan foydalanamiz
-        console.log(`ERROR, cont/loginProcess, ${err.message}`)
+    catch(err){
+        console.log(`ERROR, cont/login, ${err.message}`)
         res.json({state: "fail", message: err.message});
     }
 };
+
 
 restaurantController.logout = (req, res ) => {
     console.log("GET cont.logout");
     res.send("logout page");
 };
+
+
+restaurantController.checkSessions = (req, res ) => {
+    if(req.session?.member) {
+        res.json({state: 'succeed', data: req.session.member });
+    } else {
+        res.json ({state: "fail", message: "You aren't authonticated"});
+    }
+};
+// agar session mavjud bolsa sessiondagi ma'lumotlarni brouserga yuborsin
