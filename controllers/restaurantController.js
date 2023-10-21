@@ -23,6 +23,8 @@ restaurantController.getMyRestaurantData = async (req, res) => {
 
 
 
+
+
 restaurantController.getSignupMyRestaurant = async (req, res) => {
    try {
        console.log("GET: cont/getSignupMyRestaurant");
@@ -34,23 +36,17 @@ restaurantController.getSignupMyRestaurant = async (req, res) => {
 }
 
 
-restaurantController.signupProcess = async (req, res ) => {
+
+restaurantController.signupProcess = async (req, res) => {
     try {
-        console.log("POST: cont/signup process");
-        const data = req.body,
-            member = new Member(),  // member service modeldan instance olinyabdi
-            new_member = await member.signupData(data);   //ichida request body yuborilyabdi
-
-        req.session.member = new_member;
-        req.session.save(function () {     //login bolgandan ken qaysi page ga borishi mumkinligini korsatyabmiz
-            res.redirect("/resto/products/menu");
-        });
-
-        res.json({state: 'success', data: new_member});
-    }
-    catch(err){           // xatoni ushlassh uchun try catch dan foydalanamiz
-        console.log(`ERROR, cont/signup, ${err.message}`)
-        res.json({state: "fail", message: err.message});
+        console.log("POST: cont/signup");
+        const data = req.body;
+        const member = new Member(); // Make sure to import and instantiate the Member class correctly
+        req.session.member = await member.signupData(data);
+        res.redirect('/resto/products/menu');
+    } catch (err) {
+        console.log(`ERROR, cont/signup, ${err.message}`);
+        res.json({ state: 'fail', message: err.message });
     }
 };
 
@@ -98,7 +94,7 @@ restaurantController.checkSessions = (req, res ) => {
     if(req.session?.member) {
         res.json({state: 'succeed', data: req.session.member });
     } else {
-        res.json ({state: "fail", message: "You aren't authenticated"});
+        res. json ({state: "fail", message: "You aren't authenticated"});
     }
 };
 // agar session mavjud bolsa sessiondagi ma'lumotlarni brouserga yuborsin

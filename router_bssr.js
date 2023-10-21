@@ -3,6 +3,8 @@ const express = require("express");
 const router_bssr = express.Router();                   // expressni ichidan router olib chiqilyabdi
 const restaurantController = require("./controllers/restaurantController");
 const productController = require("./controllers/productController");
+//const uploader_product = require("./utils/upload-multer");
+const {uploadProductImage} = require("./utils/upload-multer");
 
 
 /**********************************
@@ -28,8 +30,11 @@ router_bssr.get("/logout", restaurantController.logout);
 router_bssr.get("/check-me", restaurantController.checkSessions);
 
 router_bssr.get("/products/menu", restaurantController.getMyRestaurantData);
-router_bssr.post("/products/create",restaurantController.validateAuthRestaurant,
-                 productController.addNewProduct);
+router_bssr.post("/products/create",
+    restaurantController.validateAuthRestaurant,
+    uploadProductImage.array("product_images", 5),
+         productController.addNewProduct
+);
 router_bssr.post("products/edit/:id", productController.updateChosenProduct);
 
 

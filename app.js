@@ -23,7 +23,7 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET,  //sessionda secret code yozilyabdi
         cookie: {
-            maxAge: 1000 * 60 * 30, // for 30 minutes
+            maxAge: 1000 * 60 * 59, // for 30 minutes
             // qancha vaqt uchun deb beryabmiz
         },
         store: store,  // store qayerda saqlanishini beryabmiz
