@@ -41,8 +41,8 @@ restaurantController.signupProcess = async (req, res) => {
     try {
         console.log("POST: cont/signup");
         const data = req.body;
-        const member = new Member(); // Make sure to import and instantiate the Member class correctly
-        req.session.member = await member.signupData(data);
+        const member = new Member(); // member servica modeldan instance olyabdi
+        req.session.member = await member.signupData(data); // mongo db ga qo'shib berdi
         res.redirect('/resto/products/menu');
     } catch (err) {
         console.log(`ERROR, cont/signup, ${err.message}`);

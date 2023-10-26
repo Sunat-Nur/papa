@@ -4,6 +4,8 @@
  */
 
 
+// constrollernarni object orqali, modellarni skima orqali quramiz
+
 const Member = require("../models/member");
 let memberController = module.exports;
 
