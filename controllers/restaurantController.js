@@ -4,17 +4,23 @@
  */
 
 
+const Product = require("../models/Product");
 const Member = require("../models/member");
+
 let restaurantController = module.exports;
 
 
 
-restaurantController.getMyRestaurantData = async (req, res) => {
+restaurantController.getMyRestaurantProducts = async (req, res) => {
     try {
         console.log("GET: cont/getSignupMyRestaurant");
-        // TODO get my restaurant products
+        const  product = new Product();       // product class dan product objectini hosil qilyabmiz
+        const data = await product.getAllProductsDataResto(res.locals.member);
+        //restorani product listini oberadi
+        // getallProductdataResto methodini hosil qilyabmiz
+        // bu yerda to'g'ridan to'g'ri localdan  datani qabul qilyabdi
 
-        res.render("restaurant-menu");
+        res.render("restaurant-menu", {restaurant_data: data} ); // restarant menuga tegishli data borsin
     } catch(err) {
         console.log(`ERROR: cont/getMyRestaurantData, ${err.message}`);
         res.json({state: "fail", message: err.message});
@@ -44,6 +50,8 @@ restaurantController.signupProcess = async (req, res) => {
         const member = new Member(); // member servica modeldan instance olyabdi
         req.session.member = await member.signupData(data); // mongo db ga qo'shib berdi
         res.redirect('/resto/products/menu');
+        // res.send("ok");
+
     } catch (err) {
         console.log(`ERROR, cont/signup, ${err.message}`);
         res.json({ state: 'fail', message: err.message });
@@ -66,6 +74,7 @@ restaurantController.loginProcess = async (req, res ) => {
         const data = req.body,
             member = new Member();   //ichida request body yuborilyabdi
         req.session.member = await member.loginData(data);
+        // res.send("ok");
         req.session.save(function () {     //login bolgandan ken qaysi page ga borishi mumkinligini korsatyabmiz
             res.redirect("/resto/products/menu");
         });

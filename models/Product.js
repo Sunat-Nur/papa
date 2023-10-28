@@ -13,6 +13,23 @@ class Product {
     constructor() {
         this.productModel = ProductModel;  //bydefaul ProductModel classni hosil qilib (ProductModel)ga tenglashtirayopti.
     }
+
+    async getAllProductsDataResto(member) {
+        try {
+            member._id = shapeIntoMongooseObjectId(member._id);  // mb_id mongodb objectga teng bolmasa mongodb objectga aylantirib beradi
+            const result = await this.productModel.find({
+                restaurant_mb_is: member._id // agar res_mb_is tng bolsa member_id shuni resultga olib bersin deyabmiz
+            });
+
+            assert.ok(result, Definer.general_err1);
+            console.log(result);
+            return result;
+        } catch(err){
+            throw err;
+        }
+    }
+
+
     async addNewProductData(data, member) {   // method yasab oldik.
         try {
             data.restaurant_mb_id = shapeIntoMongooseObjectId(member._id); // memberIDni  MONGODB ObjectID aylantirilmoqda member._id ichidan.
@@ -21,7 +38,7 @@ class Product {
             const new_product = new this.productModel(data);  // bu schema model
             const result = await new_product.save();
 
-            assert.ok(result, Definer.product_err1);
+            assert.ok(result, Definer.product_err1); //data base da restaurant bolmasa error beradi
             return result;
         } catch (err) {
             throw err;

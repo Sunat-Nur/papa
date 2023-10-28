@@ -33,8 +33,8 @@ app.use(                                       // app use  middleware, sessionni
 );
 
 app.use(function (req, res,next ) {
-    res.locals.member = req.session.member;        //har bir keladigan request  ucun ushubi mantiq
-    next();                                        // respns local memberni ichida session memberni yukala deyabmiz
+    res.locals.member = req.session.member;
+    next();
 
 })
 // 3: Views code
