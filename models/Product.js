@@ -18,11 +18,10 @@ class Product {
         try {
             member._id = shapeIntoMongooseObjectId(member._id);  // mb_id mongodb objectga teng bolmasa mongodb objectga aylantirib beradi
             const result = await this.productModel.find({
-                restaurant_mb_is: member._id // agar res_mb_is tng bolsa member_id shuni resultga olib bersin deyabmiz
+                restaurant_mb_id: member._id // agar res_mb_is tng bolsa member_id shuni resultga olib bersin deyabmiz
             });
-
             assert.ok(result, Definer.general_err1);
-            console.log(result);
+            // console.log("result:", result);
             return result;
         } catch(err){
             throw err;

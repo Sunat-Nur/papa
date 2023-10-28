@@ -11,9 +11,20 @@ let restaurantController = module.exports;
 
 
 
+restaurantController.home = (req,res) => {
+    try {
+        console.log("GET: cont/home");
+        res.render('home-page');  // home-page.ejs fielga malumotni yuborayopti.
+    } catch(err) {
+        console.log(`ERROR: cont/home, ${err.message}`);  //error bulsa qaytar degan qism.
+        res.json({state: "fail", message: err.message});
+    }
+};
+
+
 restaurantController.getMyRestaurantProducts = async (req, res) => {
     try {
-        console.log("GET: cont/getSignupMyRestaurant");
+        console.log("GET: cont/getMyRestaurantProducts");
         const  product = new Product();       // product class dan product objectini hosil qilyabmiz
         const data = await product.getAllProductsDataResto(res.locals.member);
         //restorani product listini oberadi
@@ -26,10 +37,6 @@ restaurantController.getMyRestaurantProducts = async (req, res) => {
         res.json({state: "fail", message: err.message});
     }
 }
-
-
-
-
 
 restaurantController.getSignupMyRestaurant = async (req, res) => {
    try {

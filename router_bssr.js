@@ -14,6 +14,8 @@ const {uploadProductImage} = require("./utils/upload-multer");
 
 // traditionda front-end da view ishlamaydi o'rniga json formatda ma'lumot boradi
 
+router_bssr.get("/",restaurantController.home);
+
 
 router_bssr
     .get("/signup", restaurantController.getSignupMyRestaurant)  // get ejs ni yuklash uchun.  async function ning callback methodan foydalanyabmiz
