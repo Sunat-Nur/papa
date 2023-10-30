@@ -16,6 +16,7 @@ const store = new MongoDBStore({          // mongodbstore class daan instance ol
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static('js'));
 
 // 2: Session code
 
@@ -32,16 +33,18 @@ app.use(                                       // app use  middleware, sessionni
     })
 );
 
+
 app.use(function (req, res,next ) {
     res.locals.member = req.session.member;
     next();
-
 })
+
+
+
 // 3: Views code
 
 app.set("views",   "views");
 app.set("view engine",  "ejs",);
-
 
 //4: routing code
 // routerlar qaysi api addresslarni qayerga borishni hal qiladi

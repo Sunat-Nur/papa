@@ -9,8 +9,6 @@ const Member = require("../models/member");
 
 let restaurantController = module.exports;
 
-
-
 restaurantController.home = (req,res) => {
     try {
         console.log("GET: cont/home");
@@ -20,7 +18,6 @@ restaurantController.home = (req,res) => {
         res.json({state: "fail", message: err.message});
     }
 };
-
 
 restaurantController.getMyRestaurantProducts = async (req, res) => {
     try {

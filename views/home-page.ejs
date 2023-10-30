@@ -1,6 +1,6 @@
 <%- include("includes/header") %>
 
-<link rel="stylesheet" type="text/css" href="/css/home.css" />
+<link rel="stylesheet" type="text/css" href="/public/css/home.css" />
 <style>
     body{
         background-color: #2c261e;
@@ -94,8 +94,8 @@
 
     const sphereAnimation = (function() {
 
-        let sphereEl = document.querySelector('.sphere-animation');
-        let spherePathEls = sphereEl.querySelectorAll('.sphere path');
+        let sphereEl = document.querySelector(".sphere-animation");
+        let spherePathEls = sphereEl.querySelectorAll(".sphere path");
         let pathLength = spherePathEls.length;
         let hasStarted = false;
         let aimations = [];
