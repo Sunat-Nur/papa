@@ -2,7 +2,6 @@
 
 <link rel="stylesheet" type="text/css" href="/css/login.css">
 
-<!--(onsubmit return validateSignUpForm)biz kiritgan maulotlarni mantiqini tekshirsin-->
 <body>
 <form
         onsubmit="return validateSignUpForm()"
@@ -105,7 +104,69 @@
         <button class="login_btn btn" name="signup" type="submit">
             Ro'yxatdan o'tish
         </button>
-
     </div>
 </form>
 </body>
+
+<script>
+    $(function () {
+        let fileTarget = $(".filebox .upload-hidden");
+        let filename = "";
+        fileTarget.on("change", function () {
+            if(window.FileReader) {
+                const uploading_file = $(this) [0].files[0];
+                const fileType = uploading_file["type"];
+                const validImagesTypes = ["image/jpg", "image/jpeg", "image/png",];
+                if (!validImagesTypes.includes(fileType)) {
+                    alert(
+                        "iltimos ruxsat berilgan formatdagi rasmlarni yuklang. jpg,  jpeg, png"
+                    );
+                } else {
+                    if (uploading_file) {
+                        console.log(URL.createObjectURL(uploading_file));
+                        $(".upload_img_frame")
+                          .attr("src", URL.createObjectURL(uploading_file))
+                            .addClass("success");
+                    }
+                    filename = uploading_file.name;
+                }
+            }
+
+            $(this).siblings(".upload-name").val(filename);
+        });
+    });
+
+
+
+    function validateSignUpForm() {
+        const mb_nick = $(".mb_nick").val();
+        const mb_phone = $(".mb_phone").val();
+        const mb_password = $(".mb_password").val();
+        const mb_confirm_password = $(".mb_confirm_password").val();
+        const restaurant_img = $('.restaurant_img').get(0).files[0] ?? null;
+
+        if(
+            mb_nick === ''
+            || mb_phone === ''
+            || mb_password === ''
+            || mb_confirm_password === ''
+        ) {
+            alert("iltimos hamma ma'lumotlarni kiriitng");
+            return false;
+        } else if (mb_password !== mb_confirm_password) {
+            alert(`iltimos passwordni to'g'ri kiriting`);
+            return false;
+        }
+
+        if(!restaurant_img) {
+            alert("iltimos rasmni yuklang!");
+            return false;
+        }
+
+        return true;
+    }
+
+
+</script>
+
+<%- include("includes/footer") %>

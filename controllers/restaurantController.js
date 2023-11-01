@@ -6,6 +6,8 @@
 
 const Product = require("../models/Product");
 const Member = require("../models/member");
+const Definer = require("../lib/mistake");
+const assert = require("assert");
 
 let restaurantController = module.exports;
 
@@ -50,12 +52,18 @@ restaurantController.getSignupMyRestaurant = async (req, res) => {
 restaurantController.signupProcess = async (req, res) => {
     try {
         console.log("POST: cont/signupProcess");
-        const data = req.body;
-        const member = new Member(); // member servica modeldan instance olyabdi
-        req.session.member = await member.signupData(data); // mongo db ga qo'shib berdi
-        res.redirect('/resto/products/menu');
-        // res.send("ok");
+        assert(req.file, Definer.general_err3);
 
+        let new_member = req.body;
+        new_member.mb_type = "RESTAURANT";
+        new_member.mb_image = req.file.path;
+
+        const member = new Member(); // member servica modeldan instance olyabdi
+        const result = await member.signupData(new_member); // mongo db ga qo'shib berdi
+        assert(req.file, Definer.general_err1);
+
+        req.session.member = result;
+        res.redirect('/resto/products/menu');
     } catch (err) {
         console.log(`ERROR, cont/signupProcess, ${err.message}`);
         res.json({ state: 'fail', message: err.message });
