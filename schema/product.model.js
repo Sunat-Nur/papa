@@ -104,8 +104,8 @@ productSchema.index(
         product_size: 1,
         product_volume: 1,
     },
-    {unique: true}
-); // index tush bu: 1ta restaurant un birxil nomdagi tovarni, bir size va volume bulsa,databasega yozmasin deg.
+    {unique: true}     //compound  unique ucun ishlatiladi
+); // index  bu: 1ta restaurant un birxil nomdagi tovarni, bir size va volume bulsa,databasega yozmasin deg.
 
 
 module.exports = mongoose.model("Product", productSchema);

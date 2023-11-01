@@ -18,8 +18,8 @@ router_bssr.get("/",restaurantController.home);
 
 
 router_bssr
-    .get("/signup", restaurantController.getSignupMyRestaurant)  // get ejs ni yuklash uchun.  async function ning callback methodan foydalanyabmiz
-    .post("/signup", restaurantController.signupProcess);  // async function ning callback methodan foydalanyabmiz
+    .get("/sign-up", restaurantController.getSignupMyRestaurant)  // get ejs ni yuklash uchun.  async function ning callback methodan foydalanyabmiz
+    .post("/sign-up", restaurantController.signupProcess);  // async function ning callback methodan foydalanyabmiz
 
 // biri pageni obberadi biri run qiladi
 

@@ -38,7 +38,9 @@ class Member {
            const member = await this.memberModel // member schema modeldan
                .findOne(
                    {mb_nick: input.mb_nick},
-                   { mb_nick: 1, mb_password: 1})  // 0 va 1 buyog'da majburlab chaqiryabdi forced chaqirish..
+                   { mb_nick: 1, mb_password: 1})  // 0 va 1 databasedan solishtirish uchun chaqiriladi
+                                                   // majburiy ravishda chaqirib olish
+                                    // _id default 0 bolganu uchun qiymat bermasak ham keladi
                .exec();
 
            assert.ok(member, Definer.auth_err2); // auth_err static method

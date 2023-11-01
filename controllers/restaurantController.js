@@ -77,7 +77,8 @@ restaurantController.loginProcess = async (req, res ) => {
         console.log("POST: cont/loginProcess");
         const data = req.body,
             member = new Member();        //ichida request body yuborilyabdi
-        result = await member.loginData(data);
+        result = await member.loginData(data);  //memberimizni butun ma'lumotlari resultda mavjud
+
         req.session.member = result;       // session ni ichidan member objectni hosil qilib, qiymatlarni  result ni ichida yuklaymiz
         req.session.save(function () {     //login bolgandan ken qaysi page ga borishi mumkinligini korsatyabmiz
             result.mb_type === "ADMIN"

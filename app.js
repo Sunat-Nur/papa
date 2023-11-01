@@ -28,7 +28,7 @@ app.use(                                       // app use  middleware, sessionni
             // qancha vaqt uchun deb beryabmiz
         },
         store: store,  // store qayerda saqlanishini beryabmiz
-        resave: true,
+        resave: true,  // qayta save qiladi
         saveUninitialized: true,
     })
 );
@@ -49,7 +49,7 @@ app.set("view engine",  "ejs",);
 //4: routing code
 // routerlar qaysi api addresslarni qayerga borishni hal qiladi
 
-app.use("/resto", router_bssr);       // tradition EJS, BSSR faqat admin va restarunt userlar uchun ishlatiladi
+app.use("/resto", router_bssr);       // tradition EJS, SSR faqat admin va restarunt userlar uchun ishlatiladi
 app.use("/",router);                   // modern, REACT SPA request larni routerga yuborishni sorayabmiz.
 // React shaklda single page aplication
 
