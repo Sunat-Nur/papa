@@ -110,40 +110,41 @@
 
 <script>
     $(function () {
-        let fileTarget = $(".filebox .upload-hidden");
+        let fileTarget = $(".filebox .upload-hidden");   //filetarget deb upload-hidden deb lamiz
         let filename = "";
-        fileTarget.on("change", function () {
-            if(window.FileReader) {
-                const uploading_file = $(this) [0].files[0];
-                const fileType = uploading_file["type"];
+        fileTarget.on("change", function () { //agar file on change ishga tushganda function ishga tushsin deyabmiz
+            if(window.FileReader) {           // windowni filereaderi mavjud bolsa deyabmiz
+                const uploading_file = $(this) [0].files[0];   // this ni shu joydan olishni ko'rsatyamiz
+                const fileType = uploading_file["type"];      // uploading fileni ichidan type ni olyabmiz
                 const validImagesTypes = ["image/jpg", "image/jpeg", "image/png",];
                 if (!validImagesTypes.includes(fileType)) {
                     alert(
                         "iltimos ruxsat berilgan formatdagi rasmlarni yuklang. jpg,  jpeg, png"
                     );
                 } else {
-                    if (uploading_file) {
-                        console.log(URL.createObjectURL(uploading_file));
+                    if (uploading_file) {    // aks holda uploading_file mavjud bolsa
+                        console.log(URL.createObjectURL(uploading_file));  // urlni uploading_file ga path qilyabmiz
                         $(".upload_img_frame")
-                          .attr("src", URL.createObjectURL(uploading_file))
+                          .attr("src", URL.createObjectURL(uploading_file))   // sorce va qiymatini o'zgartiryabmiz
                             .addClass("success");
                     }
                     filename = uploading_file.name;
                 }
             }
 
-            $(this).siblings(".upload-name").val(filename);
+            $(this).siblings(".upload-name").val(filename);  // file nameni uploading filega tenglashtiryabmiz
         });
     });
 
-
+    //4 xil validation bor
+    // backend (assert), database (schema), front-end(html niki require),
 
     function validateSignUpForm() {
         const mb_nick = $(".mb_nick").val();
         const mb_phone = $(".mb_phone").val();
         const mb_password = $(".mb_password").val();
         const mb_confirm_password = $(".mb_confirm_password").val();
-        const restaurant_img = $('.restaurant_img').get(0).files[0] ?? null;
+        const restaurant_img = $('.restaurant_img').get(0).files[0] ?? null;   // agar mavjud bolsa ozini ol yoki null qoy deyabmiz
 
         if(
             mb_nick === ''
