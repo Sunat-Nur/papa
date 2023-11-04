@@ -1,8 +1,8 @@
 <%- include("includes/header") %>
 
-<link rel="stylesheet" type="text/css" href="/public/css/home.css" />
+<link rel="stylesheet" type="text/css" href="/public/css/home.css"/>
 <style>
-    body{
+    body {
         background-color: #2c261e;
         font-size: 2rem;
     }
@@ -78,6 +78,7 @@
 <script>
     function fitElementToParent(el, padding) {
         let timeout = null;
+
         function resize() {
             if (timeout) clearTimeout(timeout);
             anime.set(el, {scale: 1});
@@ -88,11 +89,12 @@
             let ratio = parentOffsetWidth / elOffsetWidth;
             timeout = setTimeout(anime.set(el, {scale: ratio}), 10);
         }
+
         resize();
         window.addEventListener('resize', resize);
     }
 
-    const sphereAnimation = (function() {
+    const sphereAnimation = (function () {
 
         let sphereEl = document.querySelector(".sphere-animation");
         let spherePathEls = sphereEl.querySelectorAll(".sphere path");
@@ -103,7 +105,7 @@
         fitElementToParent(sphereEl);
 
         let breathAnimation = anime({
-            begin: function() {
+            begin: function () {
                 for (var i = 0; i < pathLength; i++) {
                     aimations.push(anime({
                         targets: spherePathEls[i],
@@ -115,8 +117,8 @@
                     }));
                 }
             },
-            update: function(ins) {
-                aimations.forEach(function(animation, i) {
+            update: function (ins) {
+                aimations.forEach(function (animation, i) {
                     let percent = (1 - Math.sin((i * .35) + (.0022 * ins.currentTime))) / 2;
                     animation.seek(animation.duration * percent);
                 });

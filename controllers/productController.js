@@ -20,7 +20,6 @@ productController.addNewProduct = async (req, res) => {       // hamma productla
         assert(req.files, Definer.general_err3);           // fayl yuklanishida xatolik bulsa, xatoni chiqarib beradi.
 
         const product = new Product();            //  Product service classi asosida product hosil qilib olayopmiz.
-        // new Product qiymat olmaydi sababi qiymatni Product.js ichidan emas, tashqaridan olayopti.
         let data = req.body;                               // req.body sidan kelayotgan malumotlarni data yozayopmiz.
 
         data.product_images = req.files.map((ele) => {    // req filedan olgan malumotlarni map qilgan holatda, pathni qaytarib yuboramiz.
@@ -28,16 +27,13 @@ productController.addNewProduct = async (req, res) => {       // hamma productla
         });                                                  // malumot yuklangandan  keyin req.body() bn kelmaydi, req.files bn keladi.
 
         const result = await product.addNewProductData(data, req.member);  // req.member bu validateAuthRestaurant ichidagi yuklab berilgan malumot
-        // agarda result mavjud bulmasa bizga definer bersin.
-        //async function bulsa (await) yozamiz.
+        assert.ok(result, Definer.product_err1);
 
         const html = `<script>
-                              alert(new product added successfully);
+                              alert('new product added successfully');
                               window.location.replace('/resto/products/menu');
                               </script>`;
         res.end(html);
-
-
     } catch(err) {
         console.log(`ERROR: cont/addNewProduct, ${err.message}`);
 
@@ -47,8 +43,8 @@ productController.addNewProduct = async (req, res) => {       // hamma productla
 productController.updateChosenProduct = async (req, res) => {       // hamma productlarni oladigam method.
     try {
         console.log("POST: cont/updateChosenProduct");
-        const product = new Product();                     //product objectini hosil qildik
-        const id = req.params.id;                         //product ID sini paramsni ichidan olayopmiz.
+        const product = new Product();                     //product service modeldan inctanse olyabdi
+        const id = req.params.id;                         // params.id id ga tenglayabmiz ( qayta nomlash)
         const result = await product.updateChosenProductData(
             id,
             req.body,

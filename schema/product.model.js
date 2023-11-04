@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
+
         product_collection: {
             type: String,
             required: true,
@@ -24,7 +25,7 @@ const productSchema = new mongoose.Schema({
         },
         product_status: {
             type: String,
-            required: false,
+            required: false,  // required kiritmasak ham boladi sababi default berganmiznpm
             default: "PAUSED",
             enum: {
                 values: product_status_enums,
@@ -38,7 +39,7 @@ const productSchema = new mongoose.Schema({
         product_discount: {
             type: Number,
             required: false,
-            default: 0,
+            default: 0,   // required shart bolmagan ma'lumotlarga default beriladi, user kiritmagan ma'lumotlarni dastur o'zi to'ldirib ketadi
         },
         product_left_cnt: {
             type: Number,
@@ -47,14 +48,17 @@ const productSchema = new mongoose.Schema({
         product_size: {
             type: String,
             default: "normal",
-            required: function() {
-                const sized_list = ["dish", "salad", "dessert"]; //productlar ruyxati.
+            required: function () {
+                const sized_list = ["small", "large", "normal", "set"]; //productlar ruyxati.
                 return sized_list.includes(this.product_collection);  //(this) => productSchema
             },
             enum: {
                 values: product_size_enums,
                 message: "{VALUE} is not among permitted enum values",
             },
+            product_collection: () => {
+
+            }
         },
         product_volume: {   //ichimliklarni hajmini kursatish un kerakli method:
             type: String,
@@ -93,7 +97,7 @@ const productSchema = new mongoose.Schema({
         },
 
     },
-    {timestamps: true } // createAT=> malumot hosil qilinganda avtomatik vaqtini quyib beradi.
+    {timestamps: true} // createAT=> malumot hosil qilinganda avtomatik vaqtini quyib beradi.
     //updateAT => oxirgi malumot uzgartirilgan vaqtini quyib beradi
 );
 

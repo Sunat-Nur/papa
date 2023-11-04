@@ -24,13 +24,3 @@ a {
 .nav-item disabled {
     color: #898071;
 }
-
-
-.group_name {
-    position: absolute;
-    z-index: 100;
-    top: 1%;
-    color: #2c261e;
-    font-size: xx-large;
-    font-family: monospace;
-}

@@ -18,12 +18,12 @@ class Product {
         try {
             member._id = shapeIntoMongooseObjectId(member._id);  // mb_id mongodb objectga teng bolmasa mongodb objectga aylantirib beradi
             const result = await this.productModel.find({
-                restaurant_mb_id: member._id // agar res_mb_is tng bolsa member_id shuni resultga olib bersin deyabmiz
+                restaurant_mb_id: member._id // agar res_mb_id tng bolsa member_id shuni resultga olib bersin deyabmiz
             });
             assert.ok(result, Definer.general_err1);
             // console.log("result:", result);
             return result;
-        } catch(err){
+        } catch (err) {
             throw err;
         }
     }
@@ -48,14 +48,11 @@ class Product {
     async updateChosenProductData(id, updated_data, mb_id) {   // method yasab oldik.
         try {
             id = shapeIntoMongooseObjectId(id); // memberIDni  MONGODB ObjectID aylantirilmoqda _id ichidan.
-            mb_id = shapeIntoMongooseObjectId(mb_id);
+            mb_id = shapeIntoMongooseObjectId(mb_id); // id bu yerda biz olmoqchi bolgan product
 
-            const result = await this.productModel.findOneAndUpdate(
-                {_id: id, restaurant_mb_id: mb_id}, // 1chi object filtering buladi qaysi objectda update qilmoqchisz.
-                // id === id, restaurant mb_idsi === mb_idga.
-                updated_data,                 // uzgartirmoqchi bulgan data yozamiz.
-                {
-                    runValidators: true,  //uzgargan datani yuborsa.bularni yozishimizdan sabab uzgargan qiymatni kurmoqchiman.
+            const result = await this.productModel  // product schema modelni findOneAndUpadate ( static ) methodini ishlayabmiz
+                .findOneAndUpdate({_id: id, restaurant_mb_id: mb_id}, updated_data, {
+                    runValidators: true,
                     lean: true,
                     returnDocument: "after", //yangilangan data ni bizga beradi
 
