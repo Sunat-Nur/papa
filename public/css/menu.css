@@ -1,0 +1,94 @@
+body{
+    font-size: 2rem;
+    background: #2c261e;
+
+}
+
+
+.restaurant_menu_frame {
+    position: relative;
+    padding-bottom: 80px;
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #2c261e;
+}
+
+.restaurant_container {
+    position: relative;
+    margin-top: 100px;
+    width: 1320px;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.restaurant_container .dishs_table {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.new_dish_txt {
+    font-family: 'Source Serif Pro';
+    font-family: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 25px;
+    color:#FFFFFF;
+    margin-top: 30px;
+    margin-bottom: 12px;
+}
+
+.spec_select {
+    position: relative;
+    padding: 0px 7px;
+    /*width: 100%; */
+    height: 27px;
+    background: #FFFFFF;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    font-family: 'GT Walsheim Pro';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 26px;
+    color: #4F547B;
+}
+
+.long_input {
+    position: relative;
+    margin-top: 25px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+.new_dish_txt {
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 25px;
+    color: #FFFFFF;
+}
+
+
+.restaurant_container .dish_container{
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -30,13 +30,12 @@ productController.addNewProduct = async (req, res) => {       // hamma productla
         const result = await product.addNewProductData(data, req.member);  // req.member bu validateAuthRestaurant ichidagi yuklab berilgan malumot
         // agarda result mavjud bulmasa bizga definer bersin.
         //async function bulsa (await) yozamiz.
-        res.send("ok");
 
-        // const html = `<script>
-        //                       alert(new dish added successfully);
-        //                       window.location.replace('/resto/products/menu');
-        //                       </script>`;
-        // res.end(html);
+        const html = `<script>
+                              alert(new product added successfully);
+                              window.location.replace('/resto/products/menu');
+                              </script>`;
+        res.end(html);
 
 
     } catch(err) {

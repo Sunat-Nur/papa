@@ -33,7 +33,7 @@
          res.render("restaurant-menu", {restaurant_data: data} ); // restarant menuga tegishli data borsin
       } catch(err) {
           console.log(`ERROR: cont/getMyRestaurantData, ${err.message}`);
-          res.json({state: "fail", message: err.message});
+          res.redirect("/resto");
       }
   }
 
