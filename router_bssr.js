@@ -44,8 +44,12 @@ router_bssr.post("/products/edit/:id",   // oxirida : nupqda bolsa param xisobla
     restaurantController.validateAuthRestaurant,
     productController.updateChosenProduct);
 
+router_bssr.get("/all-restaurant",
+    restaurantController.validateAdmin,
+    restaurantController.getAllRestaurants);
+
+
+
 
 // export router
 module.exports = router_bssr;
-
-

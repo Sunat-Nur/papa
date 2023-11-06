@@ -28,7 +28,7 @@ app.use(                                       // app use  middleware, sessionni
             // qancha vaqt uchun deb beryabmiz
         },
         store: store,  // store qayerda saqlanishini beryabmiz
-        resave: true,  // qayta save qiladi
+        resave: true,  // cookie ni qayta  save qiladi
         saveUninitialized: true,
     })
 );
