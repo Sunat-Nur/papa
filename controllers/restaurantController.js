@@ -169,7 +169,7 @@ restaurantController.updateRestaurantByAdmin = async (req, res) => {
 
         const restaurant = new Restaurant();
         const result = await restaurant.updateRestaurantByAdminData(req.body);  // body qismdan datani oladi
-        await res.json({state: "success", data: result});  // natija success bolsa res.jsonda javob qaytaradi
+        await res.json({state: "success", data: result});  // natija success bolsa res.json ko'rinishda front-ent ga  ma'lumot yuboryabdi
     } catch (err) {
         console.log(`ERROR, cont/updateRestaurantByAdmin, ${err.message}`);
         res.json({state: "fail", message: err.message});
