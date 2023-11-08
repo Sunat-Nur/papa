@@ -47,7 +47,7 @@
                             </label>
                         </td>
                         <td style="width: 17%">
-                            <select class="spec_select mb_status">
+                            <select class="spec_select mb_status"  id="<%= value.id %>">
                                 <option value="ONPAUSE" <%= value.mb_status === "ONPAUSE" ? "selected" : "" %> >
                                     ONPAUSE
                                 </option>
@@ -79,7 +79,22 @@
             axios.post("/resto/all-restaurant/edit", {id: id, mb_top: mb_top})
                 .then(response => {
                     const result = response.data;
-                    if(result.state === "success") alert("successfully updated");
+                    if (result.state === "success") alert("successfully updated");
+                    else alert(result.message);
+                })
+                .catch(err => console.log(err));
+        })
+
+        // manipulate restaurants status features
+        $(".mb_status").on("change", function (e) {
+            const id = e.target.id;
+            const mb_status = $(`#${id}.mb_status`).val();
+            console.log("mb_status:", mb_status);
+
+            axios.post("/resto/all-restaurant/edit", {id: id, mb_status: mb_status})
+                .then(response => {
+                    const result = response.data;
+                    if (result.state === "success") alert("successfully updated");
                     else alert(result.message);
                 })
                 .catch(err => console.log(err));
