@@ -15,7 +15,7 @@ const store = new MongoDBStore({          // mongodbstore class daan instance ol
 //1: Kirish code
 app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));  //object ichida bolsa deb
 app.use(express.static('js'));
 
 // 2: Session code
@@ -29,7 +29,7 @@ app.use(                                       // app use  middleware, sessionni
         },
         store: store,  // store qayerda saqlanishini beryabmiz
         resave: true,  // cookie ni qayta  save qiladi
-        saveUninitialized: true,
+        saveUninitialized: true,  // saqlashni boshlashga true beryabmiz
     })
 );
 

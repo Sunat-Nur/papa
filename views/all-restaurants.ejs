@@ -13,7 +13,7 @@
                 <a class="nav-link" style="color: #E3C08D" href="/resto/all-restaurant">ALLRestorant</a>
             </li>
             <li class="nav-item" style="cursor: pointer">
-                <a class="nav-link" style="color: #E3C08D"  href="/resto/logout">Logout</a>
+                <a class="nav-link" style="color: #E3C08D" href="/resto/logout">Logout</a>
             </li>
         </ul>
     </div>
@@ -34,31 +34,50 @@
                     </tr>
                     </thead>
 
-                    <tbody style="background-color: white">
-                    <td>1</td>
-                    <td>tandir</td>
-                    <td>343434343</td>
-                    <td style="width: 23%">
-                        <label class="switch">
-                            <input type="checkbox" class="mb_top" />
-                            <span class="slider around"></span>
-                        </label>
-                    </td>
-
-                    <td style="width: 17%">
-                        <select class="spec_select mb_status">
-                            <option value="ONPAUSE">ONPAUSE</option>
-                            <option value="ACTIVE">ACTIVE</option>
-                            <option value="DELETED">DELETED</option>
-                        </select>
-                    </td>
-                    </tbody>
+                    <% restaurants_data.map(function (value, key)  { %>
+                        <tbody style="background-color: white">
+                        <td><%= key + 1 %> </td>
+                        <td><%= value.mb_nick %></td>
+                        <td><%= value.mb_phone %></td>
+                        <td style="width: 23%">
+                            <label class="switch">
+                                <input type="checkbox" class="mb_top" id="<%= value.id %>"
+                                        <%= value.mb_top === "Y" ? "checked" : "" %> />
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td style="width: 17%">
+                            <select class="spec_select mb_status">
+                                <option value="ONPAUSE" <%= value.mb_status === "ONPAUSE" ? "selected" : "" %> >
+                                    ONPAUSE
+                                </option>
+                                <option value="ACTIVE" <%= value.mb_status === "ACTIVE" ? "selected" : "" %> >ACTIVE
+                                </option>
+                                <option value="DELETED" <%= value.mb_status === "DELETED" ? "selected" : "" %> >
+                                    DELETED
+                                </option>
+                            </select>
+                        </td>
+                        </tbody>
+                    <% }); %>
                 </table>
             </div>
         </div>
     </div>
-
 </div>
+
+<script>
+
+    $(function () {
+
+        // manipulate restaurants top features
+        $(".mb_top").on("change", function (e) {
+            const id = e.target.id;
+            const mb_top = e.target.checked ? "Y" : "N";
+            console.log(`${id} va ${mb_top}`);
+        })
+    })
+</script>
 
 
 </body>

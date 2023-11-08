@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+const dotenv = require("dotenv");   // .env papkasi ucun require qilyabmiz
 dotenv.config();
 
 
