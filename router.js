@@ -16,6 +16,7 @@ const memberController = require("./controllers/memberController");
 router.post("/signup", memberController.signup);  // async function ning callback methodan foydalanyabmiz
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
+router.get("/check-me", memberController.checkMyAuthentication);
 
 
 // boshqa routerlar
