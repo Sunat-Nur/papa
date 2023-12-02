@@ -7,10 +7,12 @@
 // constrollernarni object orqali, modellarni skima orqali quramiz
 
 const Member = require("../models/member");
+// const Member = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const jwt = require("jsonwebtoken");
 const assert = require("assert");
-let memberController = module.exports;
+const memberController = module.exports;
+const memberModel = module.exports;
 
 
 memberController.signup = async (req, res) => {
@@ -116,7 +118,7 @@ memberController.getChosenMember =  async (req, res) => {
 memberController.retrieveAuthMember =   (req, res, next) => {
     try {
         const token = req.cookies["access_token"];
-        req.member = toke ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
+        req.member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
         next();
     } catch (err) {
         console.log(`ERROR, cont/retrieveAuthMember, ${err.message}`);
