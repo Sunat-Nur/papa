@@ -2,9 +2,8 @@
 const express = require("express");
 const router = express.Router();                   // expressni ichidan router olib chiqilyabdi
 const memberController = require("./controllers/memberController");
+const productController = require("./controllers/productController");
 const {getChosenMember} = require("./controllers/memberController");
-
-
 
 /**********************************
  *         REST  API             *
@@ -12,9 +11,7 @@ const {getChosenMember} = require("./controllers/memberController");
 // react uchun //  zamonaviy  usul
 
 
-//memberlarga dahldor routerlar
-
-//va bu router orqali turli xil routerlar shakilyanyabdi
+//  Member related routers
 router.post("/signup", memberController.signup);  // async function ning callback methodan foydalanyabmiz
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
@@ -26,18 +23,34 @@ router.get(
 );
 
 
+// Product related routers
+
+router.post(
+    "/products",
+    memberController.retrieveAuthMember,
+    productController.getAllProducts);
+
+
+module.exports = router;
+
+
+
+
+
+
+
+
 // boshqa routerlar
-router.get("/menu",  (req, res) =>{
-    res.send ("menu page");
-});
-
-
-router.get("/community",  (req, res) => {
-    res.send ("community page");
-});
+// router.get("/menu",  (req, res) =>{
+//     res.send ("menu page");
+// });
+//
+//
+// router.get("/community",  (req, res) => {
+//     res.send ("community page");
+// });
 
 
 // export router
-module.exports = router;
 
 

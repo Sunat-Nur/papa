@@ -1,18 +1,25 @@
-
 const Product = require("../models/Product");
 const assert = require("assert");  //ma'lum bir shartni tekshirish va dasturni to'xtatish un ishlatiladigan method.
 const Definer = require("../lib/mistake");  //Definer odatda obyekt yaratish va unga qiymatlar qo'shishda yoki obyektdan qiymatlarni o'chirishda ishlatiladi
 
-let productController = module.exports;
+const productController = module.exports;
 
 productController.getAllProducts = async (req, res) => {       // hamma productlarni oladigam method.
     try {
         console.log("GET: cont/getAllProducts");
-    } catch(err) {
+        const product = new Product();
+        const results = await product.getAllProductsData(req.member, req.body);
+        res.json({ state: "succeed", data: results});
+    } catch (err) {
         console.log(`ERROR: cont/getAllProducts, ${err.message}`);
-        res.json({ state: "fail", message: err.message });
+        res.json({state: "fail", message: err.message});
     }
 };
+
+
+/**********************************
+ *         BSSR RELATED ROUTER      *
+ **********************************/
 
 productController.addNewProduct = async (req, res) => {       // hamma productlarni oladigam method.
     try {
@@ -34,7 +41,7 @@ productController.addNewProduct = async (req, res) => {       // hamma productla
                               window.location.replace('/resto/products/menu');
                               </script>`;
         res.end(html);
-    } catch(err) {
+    } catch (err) {
         console.log(`ERROR: cont/addNewProduct, ${err.message}`);
 
     }
@@ -50,9 +57,11 @@ productController.updateChosenProduct = async (req, res) => {       // hamma pro
             req.body,
             req.member._id
         );
-        await res.json({state: "success",data: result});
-    } catch(err) {
+        await res.json({state: "success", data: result});
+    } catch (err) {
         console.log(`ERROR: cont/updateChosenProduct, ${err.message}`);
-        res.json({ state: "fail", message: err.message });
+        res.json({state: "fail", message: err.message});
     }
 };
+
+

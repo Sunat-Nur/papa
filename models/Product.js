@@ -14,6 +14,41 @@ class Product {
         this.productModel = ProductModel;  //bydefaul ProductModel classni hosil qilib (ProductModel)ga tenglashtirayopti.
     }
 
+    async getAllProductsData(member, data) {
+        try {
+            const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
+
+            let match = {product_status: "PROCESS"};
+            if (data.restaurant_mb_id) {
+                match["restaurant_mb_id"] = shapeIntoMongooseObjectId(
+                    data.restaurant_mb_id
+                );
+                match["product_collection"] = data.product_collection;
+            }
+
+            const sort =
+                data.order === "product_price"
+                    ? {[data.order]: 1}
+                    : {[data.order]: -1};
+
+            const result = await this.productModel
+                .aggregate([
+                    {$match: match},
+                    {$sort: sort},
+                    {$skip: (data.page * 1 - 1) * data.limit},
+                    {$limit: data.limit * 1},
+                ])
+                .exec();
+            // todo check auth member product click like
+
+            assert.ok(result, Definer.general_err1);
+            return result;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+
     async getAllProductsDataResto(member) {
         try {
             member._id = shapeIntoMongooseObjectId(member._id);  // mb_id mongodb objectga teng bolmasa mongodb objectga aylantirib beradi
@@ -26,7 +61,7 @@ class Product {
         } catch (err) {
             throw err;
         }
-    }
+    };
 
 
     async addNewProductData(data, member) {   // method yasab oldik.
@@ -52,15 +87,15 @@ class Product {
 
             const result = await this.productModel  // product schema modelni findOneAndUpadate ( static ) methodini ishlayabmiz
                 .findOneAndUpdate({_id: id, restaurant_mb_id: mb_id}, updated_data, {
-                    runValidators: true,
-                    lean: true,
-                    returnDocument: "after", //yangilangan data ni bizga beradi
+                        runValidators: true,
+                        lean: true,
+                        returnDocument: "after", //yangilangan data ni bizga beradi
 
-                    // runValidators: true,  //uzgargan datani yuborsa.bularni yozishimizdan sabab uzgargan qiymatni kurmoqchiman.
-                    // lean: true,
-                    // returnDocument: "before",  // eski data ni beradi.
-                }
-            ).exec();
+                        // runValidators: true,  //uzgargan datani yuborsa.bularni yozishimizdan sabab uzgargan qiymatni kurmoqchiman.
+                        // lean: true,
+                        // returnDocument: "before",  // eski data ni beradi.
+                    }
+                ).exec();
 
             assert.ok(result, Definer.general_err1);  //natijani tekshiramiz. agar malumotimiz uptade bulmagan bulsa, xatolikni chiqarsin.
             return result;                             // hammasi ajoyib bulgan bulsa return qilsin.
