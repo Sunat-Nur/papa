@@ -35,11 +35,13 @@ class Product {
                 .aggregate([
                     {$match: match},
                     {$sort: sort},
-                    {$skip: (data.page * 1 - 1) * data.limit},
-                    {$limit: data.limit * 1},
+                    // {$skip: (data.page * 1 - 1) * data.limit},
+                    // {$limit: data.limit * 1},
                 ])
                 .exec();
             // todo check auth member product click like
+
+            console.log(result);
 
             assert.ok(result, Definer.general_err1);
             return result;

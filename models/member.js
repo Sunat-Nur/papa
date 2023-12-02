@@ -1,14 +1,18 @@
+
+
 const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");
 const {shapeIntoMongooseObjectId} = require("../lib/config");
 const View = require("./View");
+const memberModel = module.exports;
+
 
 
 class Member {
     constructor() {
-        this.memberModel = MemberModel;   // service model ichida schema model =dan foydalinyabdi
+        this.memberModel = MemberModel;
     }
 
     async signupData(input) {
@@ -66,16 +70,17 @@ class Member {
     async getChosenMemberData(member, id) {
         try {
             id = shapeIntoMongooseObjectId(id);
-            console.log("member::::", member);
+            console.log("member:::", member);
 
-            if (member) {
+            if(member) {
+                // condition not seen before.
                 await this.viewChosenItemByMember(member, id, "member");
             }
 
             const result = await this.memberModel
                 .aggregate([
-                    {$match: {_id: id, mb_status: "ACTIVE"}},
-                    {$unset: "mb_password"},
+                    { $match: { _id: id, mb_status: "ACTIVE" } },
+                    { $unset: "mb_password"},
                 ])
                 .exec();
 
@@ -83,7 +88,6 @@ class Member {
             return result[0];
         } catch (err) {
             throw err;
-
         }
     };
 

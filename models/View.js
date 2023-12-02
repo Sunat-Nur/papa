@@ -1,5 +1,5 @@
 const ViewModel = require("../schema/view.model");
-
+const memberModel = require("../schema/member.model");
 
 class View {
     constructor(mb_id) {
@@ -8,21 +8,21 @@ class View {
         this.mb_id = mb_id;
     }
 
-    async validateChosenTarget(_id, group_type) {
+    async validateChosenTarget(view_ref_id, group_type) {
         try {
             let result;
-            switch (group_type) {
-                case "member":
-                    result = await this.memberModel
-                        .findById({
-                            _id: _id,
+            switch (group_type) { //switch argumenti group_type orqali kerakli kollekshinlardan izlaymiz.
+                case "member":  // faqat memberlarni tomosha qiyayotganimz un member quyamiz.
+                    result = await this.memberModel  //memberSchema modelni chaqirayopmiz.
+                        .findById({  //memberschema modelidan findById metodi orqali Id va mb_status ACTIVE holatda bulishi kerak.
+                            _id: view_ref_id,
                             mb_status: "ACTIVE",
                         })
                         .exec();
-                    break;
+                    break;     //result mavjud yoki  yuqligini qaytarishi kerak.
             }
 
-            return !!result;
+            return !!result; // true va falesni qiymatini qaytaradigan syntax, resultni qiymatini tekshiradi.
         } catch (err) {
             throw err;
         }
@@ -30,13 +30,14 @@ class View {
 
     async insertMemberView(view_ref_id, group_type) {
         try {
-            const new_view = new this.ViewModel({
+            const new_view = new this.viewModel({
                 mb_id: this.mb_id,
                 view_ref_id: view_ref_id,
                 view_group: group_type,
             });
             const result = await new_view.save();
-            // target items views sonini bittaga oshiramiz
+
+            // target items view sonini bittaga oshiramiz
             await this.modifyItemViewCounts(view_ref_id, group_type);
 
             return result;
@@ -45,17 +46,16 @@ class View {
         }
     }
 
-
     async modifyItemViewCounts(view_ref_id, group_type) {
         try {
             switch (group_type) {
                 case "member":
-                     await this.memberModel
+                    await this.memberModel
                         .findByIdAndUpdate(
                             {
                                 _id: view_ref_id,
                             },
-                            {$inc: {mb_views: 1}}
+                            { $inc: { mb_views: 1 } }
                         )
                         .exec();
                     break;
@@ -66,12 +66,13 @@ class View {
         }
     }
 
-    async checkViewExistence (view_ref_id) {
+    async checkViewExistance(view_ref_id) {
         try {
-            const view = await this.viewModel.findOne({
-                mb_id: this.mb_id,
-                view_ref_id: view_ref_id,
-            })
+            const view = await this.viewModel
+                .findOne({
+                    mb_id: this.mb_id,
+                    view_ref_id: view_ref_id,
+                })
                 .exec();
             return view ? true : false;
         } catch (err) {
