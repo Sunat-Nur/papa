@@ -18,7 +18,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));  //object ichida bolsa deb
 app.use(express.static('js'));
-app.use(cookieParser());
+app.use(cookieParser()); //
 
 // 2: Session code
 

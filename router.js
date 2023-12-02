@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();                   // expressni ichidan router olib chiqilyabdi
 const memberController = require("./controllers/memberController");
+const {getChosenMember} = require("./controllers/memberController");
 
 
 /**********************************
@@ -17,6 +18,11 @@ router.post("/signup", memberController.signup);  // async function ning callbac
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
 router.get("/check-me", memberController.checkMyAuthentication);
+router.get(
+    "/member/:id",
+    memberController.retrieveAuthMember,
+    memberController.getChosenMember
+);
 
 
 // boshqa routerlar
