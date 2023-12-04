@@ -17,7 +17,7 @@ router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
 router.get("/check-me", memberController.checkMyAuthentication);
 router.get(
-    "/member/:id",
+    "/member/:id", // url dan kirib kelgan pramni id bn belgilayman
     memberController.retrieveAuthMember,
     memberController.getChosenMember
 );
@@ -29,6 +29,13 @@ router.post(
     "/products",
     memberController.retrieveAuthMember,
     productController.getAllProducts);
+
+router.get(
+    "/products/:id",
+    memberController.retrieveAuthMember,
+    productController.getChosenProduct
+);
+
 
 
 module.exports = router;

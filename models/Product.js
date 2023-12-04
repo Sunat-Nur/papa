@@ -2,6 +2,7 @@ const assert = require("assert");
 const {shapeIntoMongooseObjectId} = require("../lib/config");   // Product Schemani export qilib oldik.
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
+const Member = require("./Member");  // mem_service modelni pro_service modelni ichida chaqirib olyabmiz
 
 
 // MANTIQ:
@@ -11,7 +12,7 @@ const ProductModel = require("../schema/product.model");
 
 class Product {
     constructor() {
-        this.productModel = ProductModel;  //bydefaul ProductModel classni hosil qilib (ProductModel)ga tenglashtirayopti.
+        this.productModel = ProductModel;  // bydefaul ProductModel classni hosil qilib (ProductModel)ga tenglashtirayopti.
     }
 
     async getAllProductsData(member, data) {
@@ -45,6 +46,45 @@ class Product {
 
             assert.ok(result, Definer.general_err1);
             return result;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    // async ishlatgani sababi product.schema model bn ishlagi uchun product.schema esa promise.best object,  mongoose orqali yasalgan va databaseda
+    // to'g'ridan to'gri ma'lumot ololmaydi wuning un requst  kutish qilib ma'lumot oladi
+    async getChosenProductData(member, id) {  // member - login bo'lgan member ===== id chosen bo'lgan product id isi
+        try {
+            // kim requst beryotganini va uning auth bolganini tekshiryabdi.
+            const auth_mb_id = shapeIntoMongooseObjectId(member?._id);  // va  mavjud bolsa idini ober va shape qilgin mongodb objectga deyabmzi
+            // ? belgisi tekshirish ma'noda
+            id = shapeIntoMongooseObjectId(id); // id ni ham string shaklda olganimiz uchun shape qilyabmiz
+            // va ni database queriyaga ishlata olamiz
+
+
+            if(member) { // agar loged bo'lgan member mavjud bolsa
+
+                // member_object hosil qil deyabmiz // mem_objectni pro_service model ichida mem_service model ishlatyabmiz, tepada require qilingan
+                const member_obj = new Member
+
+                // member.obj ichidagi .viewchosenItemByMember method ini chaqiryabmiz
+                member_obj.viewChosenItemByMember(member, id, "product");  // va ichida member, id va type (product) ni provide qilyabmiz
+            }
+
+            // bu yerda result ni olib product.schema modeldan foydalanib aggregate qilyabmiz
+            const result = await this.productModel
+                .aggregate([   //agrigation ga array beriladi
+                    { $match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni oldin deyabmiz
+
+                    // TODO: check auth member product likes or not
+
+                ])
+                .exec();
+
+            // keladigan datani mavjudligini tekshiryabmiz agar mavjud bo'lmasa error berilyabdi
+            assert.ok(result, Definer.general_err1);
+            return result;
+            // agar mavjud bo'lsa result ni return qil deyabmiz va u getChosenProduct cotrollerga boradi
         } catch (err) {
             throw err;
         }

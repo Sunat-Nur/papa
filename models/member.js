@@ -74,18 +74,21 @@ class Member {
 
             if(member) {
                 // condition not seen before.
-                await this.viewChosenItemByMember(member, id, "member");
+                await this.viewChosenItemByMember(member, id, "member"); //authenticate bolganda ishga tushadi
+
             }
 
-            const result = await this.memberModel
-                .aggregate([
-                    { $match: { _id: id, mb_status: "ACTIVE" } },
-                    { $unset: "mb_password"},
+            const result = await this.memberModel //  memberSchema modeldan aggregate qilib
+                .aggregate([    // aggregate lowlevel bo'lgani uchun schema modelga bo'ysinmaydi shunga passwordni ham oladi
+                    { $match: { _id: id, mb_status: "ACTIVE" } }, //
+                    { $unset: "mb_password"}, // unset password ni olmaslik uchun ishlatyabmiz
+
+                    // TODO: check auth member liked the chosen member
                 ])
                 .exec();
 
             assert.ok(result, Definer.general_err2);
-            return result[0];
+            return result[0]; // agregate natijani array qilib olib beradi
         } catch (err) {
             throw err;
         }
@@ -94,14 +97,15 @@ class Member {
     async viewChosenItemByMember(member, view_ref_id, group_type) {
         try {
             view_ref_id = shapeIntoMongooseObjectId(view_ref_id); // mongodb object id ga aylantirish uchun
-            const mb_id = shapeIntoMongooseObjectId(member._id);
+            const mb_id = shapeIntoMongooseObjectId(member._id); // kim ko'raydiganini member_id ga shakilantirib olyabmiz
 
-            const view = new View(mb_id);
+            const view = new View(mb_id);    // member_service modelni ichida view_service modelni chaqirib oldik
             const isValid = await view.validateChosenTarget(view_ref_id, group_type);
+            // console.log('isValid:', isValid);
             assert.ok(isValid, Definer.general_err2);
 
             // logged user has seen target before\\
-            const doesExist = await view.insertMemberView(view_ref_id, group_type);
+            const doesExist = await view.checkViewExistance(view_ref_id);
             console.log("doesExist:", doesExist);
 
             // agar oldin ko'rilgan bo'lsa mantiq

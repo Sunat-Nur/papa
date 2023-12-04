@@ -99,9 +99,11 @@ memberController.checkMyAuthentication = (req, res) => {
 memberController.getChosenMember = async (req, res) => {
     try {
         console.log("GET cont/getChosenMember");
-        const id = req.params.id;
-        const member = new Member();
+        const id = req.params.id;     //re.params.id ni o'zgarmas id qilib olyabmiz ( qayta nomlayabmiz )
+        const member = new Member(); // serivice member modeldan instance olib yangi object yaratyabmiz
         const result = await member.getChosenMemberData(req.member, id);
+        // getchosendata ini ichidan member va  id datani olib resultga yuboryabmiz
+
 
         res.json({state: "succeed", data: result});
     } catch (err) {
@@ -110,11 +112,11 @@ memberController.getChosenMember = async (req, res) => {
     }
 };
 
-memberController.retrieveAuthMember = (req, res, next) => {
+memberController.retrieveAuthMember = (req, res, next) => {  // next kengi middleware ga o'tkazadi
     try {
-        const token = req.cookies["access_token"];
+        const token = req.cookies["access_token"]; // req.cookie ni ichidan tokeni olyabmiz
         req.member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
-        next();
+        next();  // request.memberni ichiga ma'lumot kelyabdi agar .env papkani ichidagi tokeni ber agar bo'lmasa null qiymat ber deyabdi
     } catch (err) {
         console.log(`ERROR, cont/retrieveAuthMember, ${err.message}`);
         next();
