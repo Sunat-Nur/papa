@@ -4,19 +4,22 @@ const ProductModel = require("../schema/product.model");
 
 class View {
     constructor(mb_id) {
-        this.viewModel = ViewModel;
-        this.memberModel = MemberModel;
-        this.productModel = ProductModel;
+        this.viewModel = ViewModel;  // bular schema model hisoblanadi
+        this.memberModel = MemberModel; // bular schema model hisoblanadi
+        this.productModel = ProductModel; // bular schema model hisoblanadi
         this.mb_id = mb_id;
     };
 
-    async validateChosenTarget(view_ref_id, group_type) {
+    async validateChosenTarget(view_ref_id, group_type) { // validateChosenTarget methodini yaratib view_ref_id va group_type larni argument sifatida path qilyabmiz
         try {
-            let result;
-            switch (group_type) { //switch argumenti group_type orqali kerakli kollekshinlardan izlaymiz.
+            let result; // result object yasayabmiz qiymat berilmagan
+
+            switch (group_type) { //switch  group_type argumenti orqali kerakli ma'lumotlarni kollekshinlardan izlaymiz.
+
                 case "member":  // faqat memberlarni tomosha qilayotganimz un member quyamiz.
-                    result = await this.memberModel  //memberSchema modelni chaqirayopmiz.
-                        .findById({  //member_schema modelidan findById metodi orqali Id va mb_status ACTIVE holatda bulishi kerak.
+
+                    result = await this.memberModel  //memberSchema modelni to'gridan to'gri chaqirib
+                        .findById({  //member_schema modelidan findById metodi orqali Id va mb_status db ni izlayabmiz va yuqoridagi result objectga datani yuklayabmiz
                             _id: view_ref_id,
                             mb_status: "ACTIVE",
                         })
@@ -26,59 +29,59 @@ class View {
                 //product uchun case ochyabmiz
 
                 case "product":
-                    result = await this.productModel  // this.productModel mongodb ni mongoose ni spesific objecti u orqali findOne static metodi dan foydalanib data retive qilyabmiz
+                    result = await this.productModel  // this.productModel mongodb ni mongoose ni spesific objecti u orqali findById static metodi dan foydalanib data retive qilyabmn
                         // product_schema modelni chaqiryabmiz
-                        .findById({   //product_schema modelidan findOne metodi orqali Id va mb_status find qilyabmiz
+                        .findById({   //product_schema modelidan findById metodi orqali Id va mb_status find qilyabman
                             _id: view_ref_id,
                             mb_status: "PROCESS",
                         })
                         .exec();
                     break;
             }
-            return !!result; // true va falesni qiymatini qaytaradigan syntax, resultni qiymatini tekshiradi.
-
+            return !!result; // true va falesni qiymatini qaytaradigan syntax, result objectni qiymatini tekshiradi.
         } catch (err) {
             throw err;
         }
     };
 
-    async insertMemberView(view_ref_id, group_type) {
+    async insertMemberView(view_ref_id, group_type) {  //insertMemberView method yaratilib  view_ref_id va group_type argument sifatida path qilinyabdi
         try {
-            const new_view = new this.viewModel({
-                mb_id: this.mb_id,
-                view_ref_id: view_ref_id,
-                view_group: group_type,
+            const new_view = new this.viewModel({ // this.view_schemaModeldan yangi (new_view) datani hosil qilyabmiz
+                mb_id: this.mb_id,  // bular mongodb objectid,  string emas shuning un tog togri provide qilinyabdi
+                view_ref_id: view_ref_id, // bular mongodb object id,  string emas shuning un tog togri provide qilinyabdi
+                view_group: group_type, // bular mongodb object id,  string emas shuning un tog togri provide qilinyabdi
             });
-            const result = await new_view.save();
+            const result = await new_view.save(); // new_view datani save methodini ishlatib result objectga yuklayabmiz
 
             // target items view sonini bittaga oshiramiz
             await this.modifyItemViewCounts(view_ref_id, group_type);
-            return result;
+            return result; // va kelgan datani resultni return qilyabmiz
         } catch (err) {
             throw err;
         }
     };
 
-    async modifyItemViewCounts(view_ref_id, group_type) {
+    // 3 ta terget uchun ishlatiladigan mantiq
+    async modifyItemViewCounts(view_ref_id, group_type) { //modifyItemViewCounts method yaratib unga view_ref_id va group_type argument sifatida path qilyabman
         try {
-            switch (group_type) {
-                case "member":
-                    await this.memberModel
-                        .findByIdAndUpdate(
+            switch (group_type) {  //switch  group_type argumenti orqali kerakli ma'lumotlarni kollekshinlardan izlayabman.
+                case "member":  // faqat memberlarni tomosha qilayotganimz un member quyabman
+                    await this.memberModel // this.memberModel mongodb ni mongoose ni spesific objecti,  u orqali findByIdAndUpdate static metodi dan foydalanib data retive qilyabmn
+                        .findByIdAndUpdate(   // this.member_schema modelidan findByIdAndUpdate metodi dan foydalanyabmn
                             {
-                                _id: view_ref_id,
+                                _id: view_ref_id, // method orqali  view_ref_id ga teng idini topib
                             },
-                            {$inc: {mb_views: 1}}
+                            {$inc: {mb_views: 1}} // views qiymatini bittaga ko'paytirib boradi
                         )
                         .exec();
                     break;
-                case "product":
-                    await this.productModel
-                        .findByIdAndUpdate(
+                case "product": // faqat product tomosha ko'rayotganim un product quyabman
+                    await this.productModel // this.memberModel mongodb ni mongoose ni spesific objecti,  u orqali findByIdAndUpdate static metodi dan foydalanib data retive qilyabmn
+                        .findByIdAndUpdate(   // this.product_schema modelidan findByIdAndUpdate metodi dan foydalanyabmn
                             {
-                                _id: view_ref_id,
+                                _id: view_ref_id, //o method rqali  view_ref_id ga teng idini topib
                             },
-                            {$inc: {product_views: 1}}
+                            {$inc: {product_views: 1}} // views accountini bittaga ko'paytirib boradi
                         )
                         .exec();
                     break;
@@ -90,18 +93,20 @@ class View {
     };
 
     async checkViewExistance(view_ref_id) {
-        try {
-            const view = await this.viewModel
-                .findOne({
-                    mb_id: this.mb_id,
-                    view_ref_id: view_ref_id,
-                })
-                .exec();
-            return view ? true : false;
-        } catch (err) {
-            throw err;
+        { //checkViewExistance method yaratib unga view_ref_id  argument sifatida path qilyabman
+            try {
+                const view = await this.viewModel // this.view_schemaModeldan yangi (view) datani hosil qilyabmiz
+                    .findOne({ // this.view_schema modelidan findOne metodi dan foydalanyabmn
+                        mb_id: this.mb_id,
+                        view_ref_id: view_ref_id,
+                    })
+                    .exec();
+                return view ? true : false;
+            } catch (err) {
+                throw err;
+            }
         }
-    }
+    };
 }
 
 module.exports = View;

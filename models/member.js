@@ -1,5 +1,3 @@
-
-
 const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
@@ -7,7 +5,6 @@ const bcrypt = require("bcrypt");
 const {shapeIntoMongooseObjectId} = require("../lib/config");
 const View = require("./View");
 const memberModel = module.exports;
-
 
 
 class Member {
@@ -67,49 +64,66 @@ class Member {
         }
     };
 
-    async getChosenMemberData(member, id) {
+    // getChosenMemberData methodni ni ikkita parametri bor bular member va id
+    async getChosenMemberData(member, id) {  // member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
         try {
-            id = shapeIntoMongooseObjectId(id);
+            id = shapeIntoMongooseObjectId(id); // id ini mongoose o'qiy oladigan formatda shape qilyabmiz
             console.log("member:::", member);
 
-            if(member) {
-                // condition not seen before.
-                await this.viewChosenItemByMember(member, id, "member"); //authenticate bolganda ishga tushadi
+            if (member) { // agar  authenticated  bo'lgan member bolsa ishga tuwur deyabmiz
+                // condition if not seen before.
+
+                //viewChosenItemByMember methodiga (member--kim, id--kimni va group_type member) ni argument sifatida path qilyabmiz
+                await this.viewChosenItemByMember(member, id, "member");
 
             }
 
             const result = await this.memberModel //  memberSchema modeldan aggregate qilib
                 .aggregate([    // aggregate lowlevel bo'lgani uchun schema modelga bo'ysinmaydi shunga passwordni ham oladi
-                    { $match: { _id: id, mb_status: "ACTIVE" } }, //
-                    { $unset: "mb_password"}, // unset password ni olmaslik uchun ishlatyabmiz
+
+                    // match methoda database dan id ini ushbu id ga teng bo'lganini va mb_status active ekanini tekshir deyabiz
+                    {$match: {_id: id, mb_status: "ACTIVE"}},
+                    {$unset: "mb_password"}, // unset password ni olmaslik uchun ishlatyabmiz
 
                     // TODO: check auth member liked the chosen member
                 ])
                 .exec();
 
-            assert.ok(result, Definer.general_err2);
-            return result[0]; // agregate natijani array qilib olib beradi
+            assert.ok(result, Definer.general_err2);  // result data dan qaytadigan ma'lumot ni mavjudligini assert(check) qilyabmiz)
+
+            // result ni ichida 0 indexdagi qiymatni return qiladi
+            return result[0]; //agar result da data mavjud bolsa, agregate natijani array qilib olib beradi
         } catch (err) {
             throw err;
         }
     };
 
+
+    // viewChosenItemByMember methodni ni 3 ta parametri bor bular member va iview_ref_id va  group_type
     async viewChosenItemByMember(member, view_ref_id, group_type) {
         try {
-            view_ref_id = shapeIntoMongooseObjectId(view_ref_id); // mongodb object id ga aylantirish uchun
-            const mb_id = shapeIntoMongooseObjectId(member._id); // kim ko'raydiganini member_id ga shakilantirib olyabmiz
+            view_ref_id = shapeIntoMongooseObjectId(view_ref_id); // view_ref_id ini mongoose o'qiyoladigan mongooseobjectid ga shape qilyabmiz
 
-            const view = new View(mb_id);    // member_service modelni ichida view_service modelni chaqirib oldik
-            const isValid = await view.validateChosenTarget(view_ref_id, group_type);
-            // console.log('isValid:', isValid);
-            assert.ok(isValid, Definer.general_err2);
+            // bu yerda ham member_id ini, memberni ichidagi id dan olib  mongoose o'qiyoladigan mongooseobjectid ga shape qilyabmiz
+            const mb_id = shapeIntoMongooseObjectId(member._id);
+            // kim ko'raydiganini member_id ga shakilantirib olyabmiz
+
+            // member_service modelni ichida view_service modelni chaqirib oldik
+            const view = new View(mb_id);   // view_service modeldan instance olib view objectni hosil qilyabmiz va mb_id ni path qilyabmiz constructrga
+
+            // bu yerda ko'rayotgan target mavjudligini tekshirish maqsadida validate ishlatyabmn
+            // isValid object yasab qiymatini validateChosenTarget method ni javobiga tenlayabmn,
+            const isValid = await view.validateChosenTarget(view_ref_id, group_type); // view_ref_id, group_type ni path qilyabmn
+            assert.ok(isValid, Definer.general_err2); // isValid da ma'lumot mavjudligini assert qilyabmn, data  bo'lmasa error ishga tushadi
 
             // logged user has seen target before\\
             const doesExist = await view.checkViewExistance(view_ref_id);
             console.log("doesExist:", doesExist);
 
             // agar oldin ko'rilgan bo'lsa mantiq
-            if(!doesExist) {
+            if (!doesExist) { // agar mavjud bo'lgan bolsa
+
+                // result object ni insertMemberView methodga tenglayabmiz, insertMemberView methodga ref_id va group_type  argument qiymatni beryabmn
                 const result = await view.insertMemberView(view_ref_id, group_type);
                 assert.ok(result, Definer.general_err1);
             }

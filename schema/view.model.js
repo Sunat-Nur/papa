@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const { like_view_group_list, board_id_enum_list } = require("../lib/config");
-const Schema = mongoose.Schema;
+const {like_view_group_list, board_id_enum_list} = require("../lib/config"); // enum qiymatlarni chaqiryabmiz config file dan
+const Schema = mongoose.Schema; // mongoose dan olinadigan schema ni ishlatyabmiz
 
 
 const viewSchema = new mongoose.Schema({
@@ -13,10 +13,10 @@ const viewSchema = new mongoose.Schema({
                 values: like_view_group_list
             }
         },
-        bo_id: {
-            type: String,
+        bo_id: {  // bo_id faqat community ga tegishli
+            type: String, // bo_id typeni kirityabmiz
             required: false,
-            enum: {
+            enum: {       // enum qiymatlarni kirityabmiz
                 values: board_id_enum_list
             }
         }
@@ -25,3 +25,4 @@ const viewSchema = new mongoose.Schema({
 );
 
 module.exports = mongoose.model("View", viewSchema);
+// mongoosedan model metodini chaqirib olib uning ichiga viewSchemani argument sifatida path qilybmiz

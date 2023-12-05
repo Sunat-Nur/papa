@@ -17,9 +17,9 @@ router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
 router.get("/check-me", memberController.checkMyAuthentication);
 router.get(
-    "/member/:id", // url dan kirib kelgan pramni id bn belgilayman
+    "/member/:id", // biz xoxlagan member_id ni param orqali url orqali obkelyabmiz
     memberController.retrieveAuthMember,
-    memberController.getChosenMember
+    memberController.getChosenMember  // memberController dan getChosenMember metodini yasayabmiz
 );
 
 

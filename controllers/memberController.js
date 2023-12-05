@@ -56,6 +56,8 @@ memberController.login = async (req, res) => {
 
 memberController.logout = (req, res) => {
     console.log("GET cont/logout");
+
+    // cookie data ni ichida access_token nomi bn saqlangan ma'lumotni qiymatini null qilib ber deyabmiz
     res.cookie("access_token", null, {maxAge: 0, httpOnly: true});
     res.send({state: "success", data: "logout successfully! "});
 };
@@ -69,7 +71,8 @@ memberController.createToken = (result) => {  //result object hisoblanadi
             mb_type: result.mb_type,
         };
 
-        const token = jwt.sign(upload_data, process.env.SECRET_TOKEN, {  //jwt.sign ga uchta argument yuklayabmiz ( upload_data, SECRET_TOKEN, va  expiresIn) va uni tokenga tenglayabmiz
+        //jwt.sign ga uchta argument yuklayabmiz ( upload_data, SECRET_TOKEN, va  expiresIn) va uni tokenga tenglayabmiz
+        const token = jwt.sign(upload_data, process.env.SECRET_TOKEN, {
             expiresIn: "6h",
         });
 
@@ -99,12 +102,15 @@ memberController.checkMyAuthentication = (req, res) => {
 memberController.getChosenMember = async (req, res) => {
     try {
         console.log("GET cont/getChosenMember");
-        const id = req.params.id;     //re.params.id ni o'zgarmas id qilib olyabmiz ( qayta nomlayabmiz )
-        const member = new Member(); // serivice member modeldan instance olib yangi object yaratyabmiz
-        const result = await member.getChosenMemberData(req.member, id);
-        // getchosendata ini ichidan member va  id datani olib resultga yuboryabmiz
+        const id = req.params.id;     //req.params.id ni o'zgarmas id tenglashtirib  olyabmiz ( qayta nomlayabmiz )
+        const member = new Member(); // member_service modeldan instance olib yangi member object yaratyabmiz
 
+        // member_service modelni ichida getChosenMemberData metodini yaratyabmiz va argument sifatida req.member va id ni path  qilib resultga qaytaryabmiz
+        const result = await member.getChosenMemberData(req.member, id);    // req.member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
 
+        // console.log("result::::", result);
+
+        // agar resultda data mavjud bolsa  json formatda olyabmiz
         res.json({state: "success", data: result});
     } catch (err) {
         console.log(`ERROR, cont/getChosenMember, ${err.message}`);
@@ -112,13 +118,17 @@ memberController.getChosenMember = async (req, res) => {
     }
 };
 
+
+// token orqali hosil qilyabmiz
 memberController.retrieveAuthMember = (req, res, next) => {  // next kengi middleware ga o'tkazadi
     try {
-        const token = req.cookies["access_token"]; // req.cookie ni ichidan tokeni olyabmiz
+        const token = req.cookies["access_token"]; // req.cookies ni ichidan access_token ma'lumotni olib token object ga tenglashtiryabmiz
+
+        // request ini ichida memeber objectni hosil qilib va uni ichiga token mavjud bolsa deb jwt.verifydan foydalanib secret_token ni path qilyabmiz agar mavjud bolmasa null qaytaradi
         req.member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
         next();  // request.memberni ichiga ma'lumot kelyabdi agar .env papkani ichidagi tokeni ber agar bo'lmasa null qiymat ber deyabdi
     } catch (err) {
-        console.log(`ERROR, cont/retrieveAuthMember, ${err.message}`);
+        console.log(`ERROR, cont/retrieveAuthMember, ${err.message}`); // faqat error ni ko'rsatish uchun error ni beryabmiz
         next();
     }
 };

@@ -20,7 +20,7 @@ class Product {
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
 
             let match = {product_status: "PROCESS"};
-            if (data.restaurant_mb_id) {
+            if (data.restaurant_mb_id) { // agar bitta restaurant ni
                 match["restaurant_mb_id"] = shapeIntoMongooseObjectId(
                     data.restaurant_mb_id
                 );
@@ -28,7 +28,7 @@ class Product {
             }
 
             const sort =
-                data.order === "product_price"
+                data.order === "product_price"   // dinamic_key ni hosil qilyabmiz
                     ? {[data.order]: 1}
                     : {[data.order]: -1};
 
@@ -64,23 +64,20 @@ class Product {
 
             if(member) { // agar loged bo'lgan member mavjud bolsa
 
-                // member_object hosil qil deyabmiz // mem_objectni pro_service model ichida mem_service model ishlatyabmiz, tepada require qilingan
+                // member_service modeldan member_object hosil qil deyabmiz // mem_objectni pro_service model ichida mem_service model ishlatyabmiz, tepada require qilingan
                 const member_obj = new Member
 
                 // member.obj ichidagi .viewchosenItemByMember method ini chaqiryabmiz
-                member_obj.viewChosenItemByMember(member, id, "product");  // va ichida member, id va type (product) ni provide qilyabmiz
+                member_obj.viewChosenItemByMember(member, id, "product");  // va ichida member, id va type (product) parameterni provide qilyabmiz
             }
 
             // bu yerda result ni olib product.schema modeldan foydalanib aggregate qilyabmiz
-            const result = await this.productModel
-                .aggregate([   //agrigation ga array beriladi
-                    { $match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni oldin deyabmiz
-
+            const result = await this.productModel //buni static aggregate methodi dan foydalanyabman
+                .aggregate([   //agrigation ga bitta pipline berilyabid. type  array
+                    { $match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni olgin deyabmiz
                     // TODO: check auth member product likes or not
-
                 ])
                 .exec();
-
             // keladigan datani mavjudligini tekshiryabmiz agar mavjud bo'lmasa error berilyabdi
             assert.ok(result, Definer.general_err1);
             return result;

@@ -16,17 +16,18 @@ productController.getAllProducts = async (req, res) => {       // hamma productl
     }
 }
 
-
+ // getChosenProduct methodini iwlatyabmiz
 productController.getChosenProduct = async (req, res) => { // request ni ichida member borligini bilyabmiz
     try {
         console.log("GET: cont/getChosenProduct");
-        const id = req.params.id; // bu yerdagi id router /product/: id dan kelyabdi va uni qayta nomlayabmiz
-        const product = new Product(); // product service modeldan instance olib object yasayabmiz
-        // , ixtiyori nom bersa boladi
+
+        //req.params.id ni o'zgarmas id qilib olyabmiz ( qayta nomlayabmiz )
+        const id = req.params.id; // bu yerdagi id router /product/: id dan kelyabdi, id iga ixtiyori nom bersa boladi
+        const product = new Product(); // product service modeldan instance  olib product object yasayabmiz
 
 
-        // bu yerda product.service modelni  getChosenData degan method tidan data ni requst qilib olamiz, va bu yerga kelgan datani   resultdan qabul qilsin
-        const result =  await product.getChosenProductData(req.member, id);// request ni ichidagi memberni birinchi argument sifatida path qilyabmiz
+        // bu yerda product.service modelni  getChosenData degan method tidan data ni requst qilib olamiz, va bu yerga kelgan datani   resultdan q
+        const result =  await product.getChosenProductData(req.member, id);// request ni ichidagi req.memberni birinchi argument sifatida path qilyabmiz
         // ikkinchi argumentga paramdan oligan qiymatni ya'ni id ni path qilyabmiz
 
 
