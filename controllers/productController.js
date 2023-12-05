@@ -9,7 +9,7 @@ productController.getAllProducts = async (req, res) => {       // hamma productl
         console.log("POST: cont/getAllProducts");
         const product = new Product();
         const result = await product.getAllProductsData(req.member, req.body);
-        res.json({state: "succeed", data: result});
+        res.json({state: "success", data: result});
     } catch (err) {
         console.log(`ERROR: cont/getAllProducts, ${err.message}`);
         res.json({state: "fail", message: err.message});
@@ -30,7 +30,7 @@ productController.getChosenProduct = async (req, res) => { // request ni ichida 
         // ikkinchi argumentga paramdan oligan qiymatni ya'ni id ni path qilyabmiz
 
 
-        res.json({ state: "succeed", data: result }); // tepada resuldan qabul qilgan datani bu eyrda result ga yuboryabdi
+        res.json({ state: "success", data: result }); // tepada resuldan qabul qilgan datani bu eyrda result ga yuboryabdi
     } catch (err) {
         console.log(`ERROR: cont/getChosenProduct, ${err.message}`);
         res.json({state: "fail", message: err.message});

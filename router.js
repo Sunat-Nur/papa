@@ -1,8 +1,8 @@
-
 const express = require("express");
 const router = express.Router();                   // expressni ichidan router olib chiqilyabdi
 const memberController = require("./controllers/memberController");
 const productController = require("./controllers/productController");
+const restaurantController = require("./controllers/restaurantController");
 const {getChosenMember} = require("./controllers/memberController");
 
 /**********************************
@@ -37,14 +37,15 @@ router.get(
 );
 
 
+// restaurant related routers
+
+router.get("/restaurants",
+    memberController.retrieveAuthMember,
+    restaurantController.getRestaurants
+);
+
 
 module.exports = router;
-
-
-
-
-
-
 
 
 // boshqa routerlar

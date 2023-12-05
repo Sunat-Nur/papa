@@ -12,6 +12,27 @@ const assert = require("assert");
 
 let restaurantController = module.exports;
 
+restaurantController.getRestaurants = async (req, res) => {
+    try {
+        console.log("GET: cont/getRestaurants");
+        const data = req.query;  // req.query ni data ga tenglashtirib olyabmiz
+        restaurant = new Restaurant(); // restau_service modeldan instance  olib restaurant objectini yasab olayabdi
+
+        // restaurant objectni ichida getRestaurantData methodni hosil qilyabmiz va uning ichiga req.member va querydan olinga datani path qilyabmiz va result object ga yuklayabmiz
+        result = await restaurant.getRestaurantsData(req.member, data);          // req.member retrieveAuthMember endpoindan kelyabdi, memberni token bor yoqligini tekshiradi
+        res.json({ state: "success", data: result});  // getRestaurantsData methodidan qaytgan ma'lumotni json formatda ma'lumotni qaytaryabdi
+    } catch (err) {
+        console.log(`ERROR, cont/home, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+}
+
+
+/**********************************
+ *    Restaurant related methods   *
+ **********************************/
+
+
 restaurantController.home = (req, res) => {
     try {
         console.log("GET: cont/home");
@@ -139,7 +160,7 @@ restaurantController.validateAdmin = (req, res, next) => {
 
 restaurantController.checkSessions = (req, res) => {
     if (req.session?.member) {
-        res.json({state: 'succeed', data: req.session.member});
+        res.json({state: 'success', data: req.session.member});
     } else {
         res.json({state: "fail", message: "You aren't authenticated"});
     }
