@@ -4,10 +4,13 @@ const Definer = require("../lib/mistake");  //Definer odatda obyekt yaratish va 
 
 const productController = module.exports;
 
-productController.getAllProducts = async (req, res) => {       // hamma productlarni oladigam method.
+// hamma productlarni oladigam method.
+productController.getAllProducts = async (req, res) => { // getAllProducts method ni yaratib olyabman
     try {
         console.log("POST: cont/getAllProducts");
-        const product = new Product();
+        const product = new Product(); // Product_schema modeldan instance olib product object ni yaratib olyabman
+
+        // product_service modelni ichida getAllProductsData metodini yaratib,  argument sifatida req.member va id ni path  qilib resultga qaytaryabmiz
         const result = await product.getAllProductsData(req.member, req.body);
         res.json({state: "success", data: result});
     } catch (err) {
@@ -23,15 +26,15 @@ productController.getChosenProduct = async (req, res) => { // request ni ichida 
 
         //req.params.id ni o'zgarmas id qilib olyabmiz ( qayta nomlayabmiz )
         const id = req.params.id; // bu yerdagi id router /product/: id dan kelyabdi, id iga ixtiyori nom bersa boladi
-        const product = new Product(); // product service modeldan instance  olib product object yasayabmiz
+        product = new Product(); // product service modeldan instance  olib product object yasayabmiz
 
 
-        // bu yerda product.service modelni  getChosenData degan method tidan data ni requst qilib olamiz, va bu yerga kelgan datani   resultdan q
-        const result =  await product.getChosenProductData(req.member, id);// request ni ichidagi req.memberni birinchi argument sifatida path qilyabmiz
+        // bu yerda product.service modelni  getChosenData degan method tidan data ni requst qilib olamiz, va bu yerga kelgan datani   resultdan path qilyabman
+        result =  await product.getChosenProductData(req.member, id);// request ni ichidagi req.memberni birinchi argument sifatida path qilyabmiz
         // ikkinchi argumentga paramdan oligan qiymatni ya'ni id ni path qilyabmiz
 
 
-        res.json({ state: "success", data: result }); // tepada resuldan qabul qilgan datani bu eyrda result ga yuboryabdi
+        res.json({state: "success", data: result}); // tepada resuldan qabul qilgan datani bu eyrda result ga yuboryabdi
     } catch (err) {
         console.log(`ERROR: cont/getChosenProduct, ${err.message}`);
         res.json({state: "fail", message: err.message});

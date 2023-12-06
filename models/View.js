@@ -96,9 +96,10 @@ class View {
         { //checkViewExistance method yaratib unga view_ref_id  argument sifatida path qilyabman
             try {
                 const view = await this.viewModel // this.view_schemaModeldan yangi (view) datani hosil qilyabmiz
-                    .findOne({ // this.view_schema modelidan findOne metodi dan foydalanyabmn
-                        mb_id: this.mb_id,
-                        view_ref_id: view_ref_id,
+                    .findOne({ // this.view_schema modelidan findOne static metodi  dan foydalanyabmn
+                        mb_id: this.mb_id,  // mb_id teng bolsin berilgan mb_id ga  va
+                        view_ref_id: view_ref_id,  // view_ref_id  teng boldin view_ref_id ga deb shart kirityabman
+                        //  view_ref_id ni yuqoridagi mb_id ko'rganmi deb tekshiryabman
                     })
                     .exec();
                 return view ? true : false;

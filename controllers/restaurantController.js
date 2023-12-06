@@ -6,6 +6,7 @@
 
 const Product = require("../models/Product");
 const Member = require("../models/member");
+const member = require("../schema/member.model")
 const Restaurant = require("../models/Restaurant")
 const Definer = require("../lib/mistake");
 const assert = require("assert");
@@ -15,14 +16,32 @@ let restaurantController = module.exports;
 restaurantController.getRestaurants = async (req, res) => {
     try {
         console.log("GET: cont/getRestaurants");
-        const data = req.query;  // req.query ni data ga tenglashtirib olyabmiz
+        const data = req.query;  // req.query ni data ga tenglashtirib olyabman
         restaurant = new Restaurant(); // restau_service modeldan instance  olib restaurant objectini yasab olayabdi
 
-        // restaurant objectni ichida getRestaurantData methodni hosil qilyabmiz va uning ichiga req.member va querydan olinga datani path qilyabmiz va result object ga yuklayabmiz
+        // restaurant objectni ichida getRestaurantData methodni hosil qilyabmiz va uning ichiga req.member va querydan olinga datani path qilyabmiz va result object ga yuklayabman
         result = await restaurant.getRestaurantsData(req.member, data);          // req.member retrieveAuthMember endpoindan kelyabdi, memberni token bor yoqligini tekshiradi
-        res.json({ state: "success", data: result});  // getRestaurantsData methodidan qaytgan ma'lumotni json formatda ma'lumotni qaytaryabdi
+        res.json({state: "success", data: result});  // getRestaurantsData methodidan qaytgan ma'lumotni json formatda ma'lumotni qaytaryabdi
     } catch (err) {
         console.log(`ERROR, cont/home, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+};
+
+
+restaurantController.getChosenRestaurant = async (req, res) => { // async function shakilda getChosenRestaurants methodini yaratib olyabman
+    try {
+        console.log("GET: cont/getChosenRestaurant");
+
+        // routerda berilgan id ini,  params objectini ichida id bo'lib kelyabdi men uni id nomi bn qayta nomlab olyabman
+        const id = req.params.id;
+        restaurant = new Restaurant(); // restau_service modeldan instance  olib restaurant objectini yasab olayabdi
+
+        // restaurant_service modelni ichida getChosenRestaurantData methodni hosil qilyabman va uning ichiga req.member va querydan olinga id ni path qilib  natijani result object ga tenglayabman
+        result = await restaurant.getChosenRestaurantData(req.member, id);    // req.member retrieveAuthMember endpoindan kelyabdi, memberni token bor yoqligini tekshiradi
+        res.json({state: "success", data: result});  // getChosenRestaurants methodidan qaytgan ma'lumotni json formatda ma'lumotni qaytaryabdi
+    } catch (err) {
+        console.log(`ERROR, cont/getChosenRestaurant, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
 }

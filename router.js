@@ -12,36 +12,42 @@ const {getChosenMember} = require("./controllers/memberController");
 
 
 //  Member related routers
-router.post("/signup", memberController.signup);  // async function ning callback methodan foydalanyabmiz
+router.post("/signup", memberController.signup);  // async function ning callback methodan foydalanyabmn
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
 router.get("/check-me", memberController.checkMyAuthentication);
 router.get(
-    "/member/:id", // biz xoxlagan member_id ni param orqali url orqali obkelyabmiz
-    memberController.retrieveAuthMember,
-    memberController.getChosenMember  // memberController dan getChosenMember metodini yasayabmiz
+    "/member/:id", // biz xoxlagan member_id ni param  url orqali obkelyabmn
+    memberController.retrieveAuthMember, //  oldin view qilganmi va  kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    memberController.getChosenMember  // memberController da getChosenMember metodini yasayabmn
 );
 
 
 // Product related routers
 
 router.post(
-    "/products",
-    memberController.retrieveAuthMember,
-    productController.getAllProducts);
+    "/products",  // menga kerak boladigan querydatani requestni body qismida yuboryabman
+    memberController.retrieveAuthMember, // oldin view qilganmi va  kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    productController.getAllProducts);  // memberController da getAllProducts metodini yasayabmn
 
 router.get(
     "/products/:id",
-    memberController.retrieveAuthMember,
-    productController.getChosenProduct
+    memberController.retrieveAuthMember,  // oldin view qilganmi va  kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    productController.getChosenProduct   // memberController da getChosenProduct metodini yasayabmn
 );
 
 
 // restaurant related routers
 
 router.get("/restaurants",
-    memberController.retrieveAuthMember,
-    restaurantController.getRestaurants
+    memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    restaurantController.getRestaurants  // memberController da getRestaurants metodini yasayabmn
+);
+
+router.get(
+    "/restaurants/:id", // biz xoxlagan restaurant_id ni param,  url orqali obkelyabmn,
+    memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    restaurantController.getChosenRestaurant // restaurantController da getChosenRestaurant methodini yaratib olyabman
 );
 
 

@@ -99,31 +99,34 @@ class Member {
     };
 
 
+    // database va schema_model bn ishlayotgani uchun async ko'rishida viewChosenItemByMember method yaratib oldim
     // viewChosenItemByMember methodni ni 3 ta parametri bor bular member va iview_ref_id va  group_type
     async viewChosenItemByMember(member, view_ref_id, group_type) {
         try {
+            console.log("viewChosenItemByMember:::::");
+
             view_ref_id = shapeIntoMongooseObjectId(view_ref_id); // view_ref_id ini mongoose o'qiyoladigan mongooseobjectid ga shape qilyabmiz
 
             // bu yerda ham member_id ini, memberni ichidagi id dan olib  mongoose o'qiyoladigan mongooseobjectid ga shape qilyabmiz
             const mb_id = shapeIntoMongooseObjectId(member._id);
-            // kim ko'raydiganini member_id ga shakilantirib olyabmiz
+            // kim ko'raydiganini member_id ga shakilantirib olyabman
 
             // member_service modelni ichida view_service modelni chaqirib oldik
-            const view = new View(mb_id);   // view_service modeldan instance olib view objectni hosil qilyabmiz va mb_id ni path qilyabmiz constructrga
+            const view = new View(mb_id);   // view_service modeldan instance olib view objectni hosil qilib mb_id ni constructrga path qilyabman
 
             // bu yerda ko'rayotgan target mavjudligini tekshirish maqsadida validate ishlatyabmn
-            // isValid object yasab qiymatini validateChosenTarget method ni javobiga tenlayabmn,
-            const isValid = await view.validateChosenTarget(view_ref_id, group_type); // view_ref_id, group_type ni path qilyabmn
+            // isValid object yasab qiymatini validateChosenTarget method ni javobiga tenglayabmn,
+            const isValid = await view.validateChosenTarget(view_ref_id, group_type); // view_ref_id, group_type  argument ni path qilyabmn
             assert.ok(isValid, Definer.general_err2); // isValid da ma'lumot mavjudligini assert qilyabmn, data  bo'lmasa error ishga tushadi
 
             // logged user has seen target before\\
             const doesExist = await view.checkViewExistance(view_ref_id);
             console.log("doesExist:", doesExist);
 
-            // agar oldin ko'rilgan bo'lsa mantiq
-            if (!doesExist) { // agar mavjud bo'lgan bolsa
 
-                // result object ni insertMemberView methodga tenglayabmiz, insertMemberView methodga ref_id va group_type  argument qiymatni beryabmn
+            if (!doesExist) { // agar oldin ko'rimagan bo'lsa mantiq ishlaydi
+
+                //view_schema modelni insertMemberView methodga ref_id va group_type  argument qiymat bering natijani resultga tenglayabman
                 const result = await view.insertMemberView(view_ref_id, group_type);
                 assert.ok(result, Definer.general_err1);
             }

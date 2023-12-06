@@ -17,25 +17,35 @@ class Product {
 
     async getAllProductsData(member, data) {
         try {
+            // agar memberning id mavjud bolsa auth_mb_id ni mongooseobjectId ga shape qilyabmiz
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
 
-            let match = {product_status: "PROCESS"};
-            if (data.restaurant_mb_id) { // agar bitta restaurant ni
-                match["restaurant_mb_id"] = shapeIntoMongooseObjectId(
+            // mongodb bn deep query bolgani uchun aggregation ishlatyabman
+            let match = {product_status: "PROCESS"}; // va usha aggregationga kerak boladigan match object ishlatyabman, pro_stat processda bo'lishi shart
+
+            // agar restaurant_mb_id (only one restaurant data ) mavjud bolsa
+            if (data.restaurant_mb_id) { // agar faqat bitta restaurant ga tegishli ma'lumotlar chaqirilyotgan bolsa
+
+                // agar ma'lum bir restaurant
+                match["restaurant_mb_id"] = shapeIntoMongooseObjectId( // restaurant_mb_id shape qilib olyabman
                     data.restaurant_mb_id
-                );
+                ); // ma'lum bir restaurant bolsa uwnaga tegishli product_collection ober deyabmn
                 match["product_collection"] = data.product_collection;
             }
 
-            const sort =
-                data.order === "product_price"   // dinamic_key ni hosil qilyabmiz
-                    ? {[data.order]: 1}
-                    : {[data.order]: -1};
+            const sort = // sort object ini hosil qilyabman
+                data.order === "product_price"   //  data_order product_price ga teng bolsa,   ( dinamic_key ni hosil qilyabmiz)
+                    ? {[data.order]: 1} // pastdan yuqoriga sort qil deyabman ( product_price eng arzondan boshlab degani )
+                    : {[data.order]: -1};  // bu ko'rinishi jsni maxsus sintaxis, dynamic objet lar uchun ishlatiladi, bular array emas maxsus sintaxis
 
-            const result = await this.productModel
-                .aggregate([
-                    {$match: match},
-                    {$sort: sort},
+            // {product_price: 1 }
+            // {createdAt: -1 }
+
+            const result = await this.productModel  // bu yerda product_schema modeldan foydalanib unga aggregate ni biriktiryabman
+                .aggregate([  // aggregation doim array qaytaradi
+                    {$match: match}, // match ni path qilyabmn,  tepada berilgan match objectlarni bitta qilib olyabman
+                    {$sort: sort}, // yuqoridagi sort object ni path qilyabmn
+
                     // {$skip: (data.page * 1 - 1) * data.limit},
                     // {$limit: data.limit * 1},
                 ])
@@ -62,19 +72,19 @@ class Product {
             // va ni database queriyaga ishlata olamiz
 
 
-            if(member) { // agar loged bo'lgan member mavjud bolsa
+            if (member) { // agar loged bo'lgan member mavjud bolsa
 
                 // member_service modeldan member_object hosil qil deyabmiz // mem_objectni pro_service model ichida mem_service model ishlatyabmiz, tepada require qilingan
-                const member_obj = new Member
+                const member_obj = new Member();
 
                 // member.obj ichidagi .viewchosenItemByMember method ini chaqiryabmiz
-                member_obj.viewChosenItemByMember(member, id, "product");  // va ichida member, id va type (product) parameterni provide qilyabmiz
+                await member_obj.viewChosenItemByMember(member, id, "product");  // va ichida member, id va type (product) parameterni provide qilyabmiz
             }
 
             // bu yerda result ni olib product.schema modeldan foydalanib aggregate qilyabmiz
             const result = await this.productModel //buni static aggregate methodi dan foydalanyabman
                 .aggregate([   //agrigation ga bitta pipline berilyabid. type  array
-                    { $match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni olgin deyabmiz
+                    {$match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni olgin deyabmiz
                     // TODO: check auth member product likes or not
                 ])
                 .exec();
