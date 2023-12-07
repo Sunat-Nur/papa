@@ -5,7 +5,7 @@
 
 
 const Product = require("../models/Product");
-const Member = require("../models/member");
+const Member = require("../models/Member");
 const member = require("../schema/member.model")
 const Restaurant = require("../models/Restaurant")
 const Definer = require("../lib/mistake");

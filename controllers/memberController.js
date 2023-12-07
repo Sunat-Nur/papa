@@ -6,7 +6,7 @@
 
 // constrollernarni object orqali, modellarni skima orqali quramiz
 
-const Member = require("../models/member");
+const Member = require("../models/Member");
 const Definer = require("../lib/mistake");
 const jwt = require("jsonwebtoken");
 const assert = require("assert");

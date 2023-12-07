@@ -2,7 +2,7 @@ const assert = require("assert");
 const {shapeIntoMongooseObjectId} = require("../lib/config");
 const Definer = require("../lib/mistake");
 const MemberModel = require("../schema/member.model");
-const Member = require("../models/member")
+const Member = require("./Member")
 
 // oddir userlar ham restaurant userlar ham bitta schema modeldni iwlatyabdi
 

@@ -3,6 +3,7 @@ const router = express.Router();                   // expressni ichidan router o
 const memberController = require("./controllers/memberController");
 const productController = require("./controllers/productController");
 const restaurantController = require("./controllers/restaurantController");
+const orderController = require("./controllers/orderController");
 const {getChosenMember} = require("./controllers/memberController");
 
 /**********************************
@@ -49,6 +50,15 @@ router.get(
     memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
     restaurantController.getChosenRestaurant // restaurantController da getChosenRestaurant methodini yaratib olyabman
 );
+
+
+// Order related routers
+
+router.post(
+    "/orders/create",
+    memberController.retrieveAuthMember,
+    orderController.createOrder
+)
 
 
 module.exports = router;
