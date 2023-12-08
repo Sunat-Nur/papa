@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const {shapeIntoMongooseObjectId} = require("../lib/config");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
+const config = require("../lib/config");
 
 
 class Order {
@@ -126,6 +127,49 @@ class Order {
         }
     };
 
+
+    // database va schema_model bn ishlayotgani uchun async ko'rishida getMyOrdersData method yaratib oldim
+    async getMyOrdersData(member, query) { // va bu methodga member  va queryni qiymatlarni agument sifatida path qilyabman
+        try { // agar mb ning id isi mavjud bolsa mb_id ini qabul qilib shape qilyabman database bn itegratsiya uchun
+            console.log("getMyOrdersData is working");
+            const mb_id = shapeIntoMongooseObjectId(member._id);
+            let order_status;
+
+            // query object ining ichidan qabul qilib order_statusni belgilab olyabman
+            order_status = query.status.toUpperCase();  // to UpperCase maxsus string methodini ishlatyabman maqsad
+            // status_enum qiymatlarni kichik harfda query qilib faqat back-end da katta harflarda o'zgartirib olaman
+            const matches = {mb_id: mb_id, order_status: order_status}; // aggregation uchun kerak boladigan matches objectga
+            // mb_ id va yuqoridagi mb_statuslarni tenglab olyabman
+
+            //this schema_model ni ichida aggregate  yaratib oldim
+            const result = await this.orderModel
+                .aggregate([
+                    {$match: matches}, // matche commanda siga metches ni path qilyabmiz matches ini ichida (mb_id va order_status) path qilgadim
+                    {$sort: {createdAt: -1}}, // sort commanda ini ishlatishdan maqsad eng oxirgi qo'shilgan orderlardan boshlab olib ber deyabman
+                    {
+                        $lookup: {   // orders collection dan olingan ma'lumotlar dan foydalanib lookup matig'ini qilyabmn
+                            from: "orderitems", // aggregate dan matche commandasi orqali hosil bolgan natijani orderItemsda izla (boshqa bir collection) dan deyabman
+                            localField: "_id", // matching orqali hosil bolgan bir lamchi query ni natijasi ya'ni objectni ichidan  id ni olib, foreignField dan izla deyabman
+                            foreignField: "order_id", // order_id yuqoridagi _id ga teng bolsin deb qidiryabman
+                            as: "order_items", // va natijani order_items nomi bilan save qil deyabman
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "products",
+                            localField: "order_items.product_id",
+                            foreignField: "order_id",
+                            as: "product_data", // va natijani product_data nomi bilan save qil deyabman
+                        }
+                    }
+
+                ]).exec();
+            console.log("result::::", result);
+            return result;
+        } catch (err) {
+            throw err;
+        }
+    };
 }
 
 module.exports = Order;

@@ -124,7 +124,7 @@ memberController.retrieveAuthMember = (req, res, next) => {  // next kengi middl
     try {
         const token = req.cookies["access_token"]; // req.cookies ni ichidan access_token ma'lumotni olib token object ga tenglashtiryabmiz
 
-        // request ini ichida memeber objectni hosil qilib va uni ichiga token mavjud bolsa deb jwt.verifydan foydalanib secret_token ni path qilyabmiz agar mavjud bolmasa null qaytaradi
+        // token mavjud bolsa jwt.verify usulidan foydalanib 2 ta argumentni path qilyabmiz
         req.member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
         next();  // request.memberni ichiga ma'lumot kelyabdi agar .env papkani ichidagi tokeni ber agar bo'lmasa null qiymat ber deyabdi
     } catch (err) {

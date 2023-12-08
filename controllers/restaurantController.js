@@ -16,7 +16,8 @@ let restaurantController = module.exports;
 restaurantController.getRestaurants = async (req, res) => {
     try {
         console.log("GET: cont/getRestaurants");
-        const data = req.query;  // req.query ni data ga tenglashtirib olyabman
+        // query -- paramsdan kelyabdi hear url dan kelyabdi
+        const data = req.query;  // req.query ni data ga tenglashtirib olyabman  // query --pagination order limit
         restaurant = new Restaurant(); // restau_service modeldan instance  olib restaurant objectini yasab olayabdi
 
         // restaurant objectni ichida getRestaurantData methodni hosil qilyabmiz va uning ichiga req.member va querydan olinga datani path qilyabmiz va result object ga yuklayabman

@@ -12,9 +12,9 @@ class Restaurant {
     }
 
     // database va schema_model bn ishlayotgani uchun async ko'rishida getRestaurantsData method yaratib oldim
-    async getRestaurantsData(member, data) { //getRestaurantsData method member va data qiymatarni qabul qilyabdi
+    async getRestaurantsData(member, data) { //getRestaurantsData method member va data parametr qiymatarni path qilyabman
         try {
-            // kim login bo'lyotgani va member objectning ichida  member?_id bo'lsa mongoseogbejctID ga o'zgartirib ber deyabmiz
+            // kim login bo'lyotgani,  member objectning ichida  member?_id bo'lsa mongoseogbejctID ga o'zgartirib ber deyabmiz
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
             // shape qilishdan maqsad member_schema modelni ichida query qilayotganda ishlataman
 
@@ -22,7 +22,7 @@ class Restaurant {
             let match = {mb_type: "RESTAURANT", mb_status: "ACTIVE"}; // va mb_type ga restaurant enum qiymatini va statusini kirityabmiz
             let aggregationQuery = []; // aggregationQuery arrayni hosil qilyabmiz
 
-            //past string ko'rinishda keladigan data ni  songa ko'rinishida olyabmiz va limit page larni kirityabmiz
+            //past string ko'rinishda keladigan data ni  songa ko'rinishida olyabmi,  va kirib kelgan  page larni 1 * ga ko'paytirib olyabmiz
             data.limit = data["limit"] * 1;
             data.page = data["page"] * 1;
 

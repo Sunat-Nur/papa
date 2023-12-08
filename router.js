@@ -56,9 +56,15 @@ router.get(
 
 router.post(
     "/orders/create",
-    memberController.retrieveAuthMember,
-    orderController.createOrder
+    memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    orderController.createOrder   // orderController da createOrder methodini yaratib olyabman
 )
+
+router.get(
+    "/orders",
+    memberController.retrieveAuthMember, // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    orderController.getMyOrders,  // orderController da getMyOrders methodini yaratib olyabman
+);
 
 
 module.exports = router;
