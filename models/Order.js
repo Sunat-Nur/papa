@@ -21,11 +21,13 @@ class Order {
             let order_total_amount = 0, delivery_cost = 0;
             const mb_id = shapeIntoMongooseObjectId(member._id); // mb ning id si mavjud bolsa uni shape qil deyabman, mongoose o'qiydigan shakilda
 
+            console.log(data);
 
             // data ma'lumotlarni, har bittasini item bilan qabul qilib loop qilyabman
             data.map(item => {             // asosiy maqsad order_total amount ni hisoblash olish
                 order_total_amount += item ["quantity"] * item ["price"];
             });
+
 
             // bu yerda total cost 100 dan kam bolsa delivery cost ni belgilayabman agar ko'p bolsa delivery free qoyabman
             if (order_total_amount < 100) {
@@ -158,7 +160,7 @@ class Order {
                         $lookup: {
                             from: "products",
                             localField: "order_items.product_id",
-                            foreignField: "order_id",
+                            foreignField: "_id",
                             as: "product_data", // va natijani product_data nomi bilan save qil deyabman
                         }
                     }

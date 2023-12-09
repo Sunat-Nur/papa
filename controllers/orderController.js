@@ -11,7 +11,7 @@ orderController.createOrder = async (req, res) => {
         console.log("POST: cont/createOrder")
         assert.ok(req.member, Definer.auth_err5);
 
-        console.log(req.body);
+        console.log("req.body::::::", req.body);
 
         const order = new Order(); // order_service modelda instance olib order object yartib oldim
 
