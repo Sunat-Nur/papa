@@ -61,13 +61,23 @@ router.post(
 )
 
 router.get(
-    "/orders",
+    "/orders", // end_point
     memberController.retrieveAuthMember, // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
     orderController.getMyOrders,  // orderController da getMyOrders methodini yaratib olyabman
 );
 
+router.post(
+    "/orders/edit",
+    memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
+    orderController.editChosenOrder  // orderController da editChosenOrder methodini yaratib olyabman
+);
+
 
 module.exports = router;
+
+// request lar 3 xil
+
+// rest API, TRadition va graphl request
 
 
 // boshqa routerlar
