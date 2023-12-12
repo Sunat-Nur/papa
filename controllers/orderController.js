@@ -42,9 +42,7 @@ orderController.getMyOrders = async (req, res) => {  // faqat authenticated bolg
 };
 
 // database va mongoose bn aloqada bo'lgani uchun async shakilda orderControllerda  getMyOrders methodini yaratyabman
-
-
-orderController.editChosenOrder = async (req, res) => {
+orderController.editChosenOrder = async (req, res) => { // va degfine qismida req, va res ni path qilyabman
     try {
         console.log("POST: cont/editChosenOrder");
         assert.ok(req.member, Definer.auth_err5);

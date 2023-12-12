@@ -4,7 +4,10 @@ const memberController = require("./controllers/memberController");
 const productController = require("./controllers/productController");
 const restaurantController = require("./controllers/restaurantController");
 const orderController = require("./controllers/orderController");
+const communityController = require("./controllers/communityController");
 const {getChosenMember} = require("./controllers/memberController");
+const uploader_community = require ("./utils/upload-multer")("community");
+const uploader_member = require ("./utils/upload-multer")("members"); // addres ni provide qilyabman
 
 /**********************************
  *         REST  API             *
@@ -12,7 +15,11 @@ const {getChosenMember} = require("./controllers/memberController");
 // react uchun //  zamonaviy  usul
 
 
-//  Member related routers
+/**********************************
+ * Member related routers        *
+ **********************************/
+
+
 router.post("/signup", memberController.signup);  // async function ning callback methodan foydalanyabmn
 router.post("/login", memberController.login);
 router.get("/logout", memberController.logout);
@@ -22,9 +29,9 @@ router.get(
     memberController.retrieveAuthMember, //  oldin view qilganmi va  kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
     memberController.getChosenMember  // memberController da getChosenMember metodini yasayabmn
 );
-
-
-// Product related routers
+/**********************************
+ * Product related routers        *
+ **********************************/
 
 router.post(
     "/products",  // menga kerak boladigan querydatani requestni body qismida yuboryabman
@@ -52,7 +59,9 @@ router.get(
 );
 
 
-// Order related routers
+/**********************************
+ * order related routers        *
+ **********************************/
 
 router.post(
     "/orders/create",
@@ -71,6 +80,25 @@ router.post(
     memberController.retrieveAuthMember,  // oldin view qilganmi va kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
     orderController.editChosenOrder  // orderController da editChosenOrder methodini yaratib olyabman
 );
+
+
+
+/**********************************
+ * Community related routers        *
+ **********************************/
+
+router.post(
+    "/community/imgae",
+    uploader_community.single("community_image"), // upload qiladigan rasmni single deb qoydim
+    communityController.imageInsertion
+);
+
+// article yasaydigan router yaratyabman
+router.post(
+    "/community/create",
+    memberController.retrieveAuthMember,
+    communityController.createArticle
+)
 
 
 module.exports = router;
