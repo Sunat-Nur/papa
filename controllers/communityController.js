@@ -49,7 +49,7 @@ communityController.getMemberArticles = async (req, res) => {
 
         // ( API get bolgani uchun url orqali ( birovni id isi)  mb_id isini query ini ichidan retreiv qilib olyabman va mb_id ga tenglayabman )
         // agar queryni ichida member_id none ga teng bolmasa  req.query.mb_id ini ol deyabman,
-        const mb_id = req.query.mb_id !== "none" ? req.query.mb_id : req.member._id;  // agar none ga teng bolsa authenticeted bolgan user ni idi sini olyabman
+        const mb_id = req.query.mb_id !== "none" ? req.query.mb_id : req.member?._id;  // agar none ga teng bolsa authenticeted bolgan user ni idi sini olyabman
         // va mb_id ga tenglashtiryabman
         assert.ok(mb_id, Definer.article_err1);
 

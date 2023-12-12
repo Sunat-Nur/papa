@@ -63,8 +63,9 @@ class Community {
                             localField: "mb_id",  // yuqoridagi qiymatdan izla deyabman
                             foreignField: "_id", // members collection ni ichidan qaysi dataset ga tenglash tirishni ko'rsatyabman
                             as: "member_data", // qandey nom bn save qilishni eytyabman
-                        }
-                    }
+                        },
+                    },
+                    { $unwind: "$member_data"},
                 ])
             .exec();
             assert.ok(mb_id, Definer.article_err1);
