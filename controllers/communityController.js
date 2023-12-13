@@ -65,4 +65,25 @@ communityController.getMemberArticles = async (req, res) => {
         console.log(`ERROR, cont/getMemberArticles, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
-}
+};
+
+
+
+// database va mongoose bn aloqada bo'lgani uchun async shakilda orderControllerda  getArticles methodini yaratyabman
+communityController.getArticles = async (req, res) => {
+    try {
+        console.log("GET: cont/getArticles");
+        console.log("query::::", req.query);
+
+        // community service model dan instance olib community objectini yaratib oldim
+        const community = new Community();
+
+        // community object ini ichida getArticlesData methodini chaqirib olyabman
+        const result = await community.getArticlesData(req.member, req.query);  // 2 ta qiymatni path qilyabman va natijani result ga tenglayabman
+
+        res.json({state: "success", data: result}); // va bu yerda result ni path qilyabmiz
+    } catch(err) {
+        console.log(`ERROR, cont/getArticles, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+};

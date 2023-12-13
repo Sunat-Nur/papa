@@ -106,25 +106,26 @@ router.get(
     communityController.getMemberArticles
 );
 
+router.get(
+    "/community/target",
+    memberController.retrieveAuthMember,
+    communityController.getArticles
+);
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
 
 // request lar 3 xil
 
 // rest API, TRadition va graphl request
-
-
-// boshqa routerlar
-// router.get("/menu",  (req, res) =>{
-//     res.send ("menu page");
-// });
-//
-//
-// router.get("/community",  (req, res) => {
-//     res.send ("community page");
-// });
-
-
-// export router
 
 

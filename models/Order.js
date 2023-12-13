@@ -186,6 +186,7 @@ class Order {
                 {mb_id: mb_id, _id: order_id}, // mb_id (user ni idisi)  ni mb_id  ga tenglayabman, id ni order_id ga ten deyabman
                 {order_status: order_status}, // order_statusni tenglab olyabman
                 {runValidators: true, lean: true, returnDocument: "after"} // returnDoc o'zgargan qiymanlarni yubor deyabman
+                // lean database dan document formatda keladigan data ga ma'lumotni qo'shish imkonyatini beradi
             );
             console.log(result);
 
