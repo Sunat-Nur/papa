@@ -3,6 +3,7 @@ const Definer = require("../lib/mistake");
 const assert = require("assert");
 const {shapeIntoMongooseObjectId, board_id_enum_list} = require("../lib/config");
 const {cat} = require("require/example/shared/dependency");
+const Member = require("./Member");
 
 class Community {
     constructor() {
@@ -12,7 +13,6 @@ class Community {
     // database va schema_model bn ishlayotgani uchun async ko'rishida createArticleData methodini yaratib oldim
     async createArticleData(member, data) { // va unda member, data ni path qilyabman ( authen, hamda body qismidagi data kelyabdi)
         try {
-            console.log(" createArticleData is working")
             // data ni ichida mb_id kelmaganligi ucun ( data = request.body) data ni ichida mb_id yaratib olyabman
             data.mb_id = shapeIntoMongooseObjectId(member._id); // (login bolgan) memberni id isini olib shaping qilyabman
 
@@ -80,7 +80,6 @@ class Community {
     // database va schema_model bn ishlayotgani uchun async ko'rishida saveArticleData methodini yaratib oldim
     async getArticlesData(member, inquery) { // unga parametrni path qilyabman. ( inquery dan bo_id, page va limit kelishi kerak)
         try {
-            console.log("getArticlesData is working");
             // member ninng ichidagi id dan shaping qilib olyabman
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id); // agar member mavjud bolsa uni idisini olib shaping qil deyabman
 
@@ -125,6 +124,31 @@ class Community {
             assert.ok(auth_mb_id, Definer.article_err3);
 
             return result;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    // database va schema_model bn ishlayotgani uchun async ko'rishida saveArticleData methodini yaratib oldim
+    async getChosenArticleData(member, art_id) { // unga 2 parametrni path qilyabman.
+        try {
+            art_id = shapeIntoMongooseObjectId(art_id);
+
+            // todo: increase art_views when usen has not seen before
+            if(member) { // agar member mavjud bolsa ya'ni oldin ko'rilga bolsa
+                const member_obj = new Member(); // member_service modeldan inctanse olib member_obj objectini hosil qilib olyabman
+                // member_obj objectini  viewChosenItemByMember methodini chaqirib olyabman va 3 ta qiymatni path qilib umumiy natijani resultga tenglayabman
+                const result = await member_obj.viewChosenItemByMember(member, art_id, "community");
+            }
+
+            // boArticle_schema modelini findById static methodi orqali
+            const result = await this.boArticleModel.findById({
+                _id: art_id // id ini art_id qiymatga teng bolgan id ni izla deyabman
+            })
+                .exec();
+            assert.ok(result, Definer.article_err3);
+            return result;
+
         } catch (err) {
             throw err;
         }

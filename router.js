@@ -112,7 +112,11 @@ router.get(
     communityController.getArticles
 );
 
-
+router.get(
+    "/community/single-article/:art_id", // biz xoxlagan article_id ni param,  url orqali obkelyabmn,
+    memberController.retrieveAuthMember,
+    communityController.getChosenArticle
+);
 
 
 

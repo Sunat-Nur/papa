@@ -87,3 +87,22 @@ communityController.getArticles = async (req, res) => {
         res.json({state: "fail", message: err.message});
     }
 };
+
+communityController.getChosenArticle = async (req, res) => {
+    try {
+        console.log("GET: cont/getChosenArticle");
+
+        const art_id = req.params.art_id; // request ni ichida kelyotgan params art_id ini art_id ga tenglayabman
+
+        // community service model dan instance olib community objectini yaratib oldim
+        const community = new Community();
+
+        // community object ini ichida getArticlesData methodini chaqirib olyabman
+        const result = await community.getChosenArticleData(req.member, art_id);  // 2 ta qiymatni path qilyabman va natijani result ga tenglayabman
+
+        res.json({state: "success", data: result}); // va bu yerda result ni path qilyabmiz
+    } catch (err) {
+        console.log(`ERROR, cont/getChosenArticle, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+}

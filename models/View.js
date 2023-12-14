@@ -1,12 +1,14 @@
 const ViewModel = require("../schema/view.model");
 const MemberModel = require("../schema/member.model");
 const ProductModel = require("../schema/product.model");
+const BoArticleModel = require("../schema/bo_article.model");
 
 class View {
     constructor(mb_id) {
         this.viewModel = ViewModel;  // bular schema model hisoblanadi
         this.memberModel = MemberModel; // bular schema model hisoblanadi
         this.productModel = ProductModel; // bular schema model hisoblanadi
+        this.boArticleModel = BoArticleModel;
         this.mb_id = mb_id;
     };
 
@@ -19,7 +21,7 @@ class View {
                 case "member":  // faqat memberlarni tomosha qilayotganimz un member quyamiz.
 
                     result = await this.memberModel  //memberSchema modelni to'gridan to'gri chaqirib
-                        .findById({  //member_schema modelidan findById metodi orqali Id va mb_status db ni izlayabmiz va yuqoridagi result objectga datani yuklayabmiz
+                        .findOne({  //member_schema modelidan findById metodi orqali Id va mb_status db ni izlayabmiz va yuqoridagi result objectga datani yuklayabmiz
                             _id: view_ref_id,
                             mb_status: "ACTIVE",
                         })
@@ -31,12 +33,22 @@ class View {
                 case "product":
                     result = await this.productModel  // this.productModel mongodb ni mongoose ni spesific objecti u orqali findById static metodi dan foydalanib data retive qilyabmn
                         // product_schema modelni chaqiryabmiz
-                        .findById({   //product_schema modelidan findById metodi orqali Id va mb_status find qilyabman
+                        .findOne({   //product_schema modelidan findById metodi orqali Id va mb_status find qilyabman
                             _id: view_ref_id,
-                            mb_status: "PROCESS",
+                            product_status: "PROCESS",
                         })
                         .exec();
                     break;
+
+                case "community":  // faqat communitylarni ichidagi articlelarni  tomosha qilayotganimz un community_service modelni  quyamiz.
+                    result = await this.boArticleModel  //memberSchema modelni to'gridan to'gri chaqirib
+                        .findOne({  // community_schema modelidan findById metodi orqali Id va article_status db ni izlayabmiz va yuqoridagi result objectga datani yuklayabmiz
+                            _id: view_ref_id,
+                            art_status: "active",
+                        })
+                        .exec();
+                    break;     //result mavjud yoki  yuqligini qaytarishi kerak.
+
             }
             return !!result; // true va falesni qiymatini qaytaradigan syntax, result objectni qiymatini tekshiradi.
         } catch (err) {
@@ -82,6 +94,17 @@ class View {
                                 _id: view_ref_id, //o method rqali  view_ref_id ga teng idini topib
                             },
                             {$inc: {product_views: 1}} // views accountini bittaga ko'paytirib boradi
+                        )
+                        .exec();
+                    break;
+
+                case "community":  // faqat memberlarni tomosha qilayotganimz un member quyabman
+                    await this.boArticleModel // this.boArticleModel mongodb ni mongoose ni spesific objecti,  u orqali findByIdAndUpdate static metodi dan foydalanib data retive qilyabmn
+                        .findByIdAndUpdate(   // this.member_schema modelidan findByIdAndUpdate metodi dan foydalanyabmn
+                            {
+                                _id: view_ref_id, // method orqali  view_ref_id ga teng idini topib
+                            },
+                            {$inc: {art_views: 1}} // views qiymatini bittaga ko'paytirib boradi
                         )
                         .exec();
                     break;

@@ -117,6 +117,9 @@ class Member {
             // bu yerda ko'rayotgan target mavjudligini tekshirish maqsadida validate ishlatyabmn
             // isValid object yasab qiymatini validateChosenTarget method ni javobiga tenglayabmn,
             const isValid = await view.validateChosenTarget(view_ref_id, group_type); // view_ref_id, group_type  argument ni path qilyabmn
+
+            console.log("isValid::::::", isValid);
+
             assert.ok(isValid, Definer.general_err2); // isValid da ma'lumot mavjudligini assert qilyabmn, data  bo'lmasa error ishga tushadi
 
             // logged user has seen target before\\
