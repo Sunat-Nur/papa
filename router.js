@@ -139,6 +139,13 @@ router.post(
 );
 
 
+router.get(
+    "/follow/followings",
+    followController.getMemberFollowings
+);
+
+
+
 
 module.exports = router;
 

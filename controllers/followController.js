@@ -40,4 +40,19 @@ followController.unsubscribe = async (req, res) => {
         console.log(`ERROR, cont/subscribe, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
+};
+
+followController.getMemberFollowings = async (req, res) => {
+    try {
+        console.log("GET cont/getMemberFollowings");
+        const follow = new Follow(); // follow_service modeldan instance olib follow objectini hosil qilib oldik
+
+        // yaratgan follow object ini getMemberFollowingData methodini chaqirib olyabman va unga query ni path qilib natijani resultga tenglayabman
+        const result = await follow.getMemberFollowingData(req.query);
+
+        res.json({state: "success", data: result});
+    } catch (err) {
+        console.log(`ERROR, cont/getMemberFollowings, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
 }

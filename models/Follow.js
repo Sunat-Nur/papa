@@ -84,6 +84,8 @@ class Follow {
     // database va schema_model bn ishlayotgani uchun async ko'rishida unsubscribeData method yaratib oldim
     async unsubscribeData(member, data) { // unga member va data qiymatlarini path qilyabman
         try {
+            console.log("unsubscribeData is working");
+
             const subscriber_id = shapeIntoMongooseObjectId(member._id); // member ni ichida id element i bolsa olib shape qil deyabman
             const follow_id = shapeIntoMongooseObjectId(data.mb_id); // request bodyni ichidan mb_id elementi ni olib follow_id ini shape qilib olyabman
 
@@ -98,6 +100,39 @@ class Follow {
             await this.modifyMemberFollowCounts(subscriber_id, "follow_change", -1); // o'zimni id ni kirityabman
 
             return true;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+
+    async getMemberFollowingData(inquiry) {
+        try {
+            console.log("getMemberFollowingData is working");
+            const subscriber_id = shapeIntoMongooseObjectId(inquiry.mb_id), // inquiry ichida mb_id bolsa uni subscriber_id qilib shape qilib olyabmn
+                page = inquiry.page * 1, // page ni inquiryni ichidan qabul qilib olib songa aylantirib olyabman
+                limit = inquiry.limit * 1; // limit ni inquiryni ichidan qabul qilib olib songa aylantirib olyabman
+
+            // follow_schema modelni chaqirib aggregation qilyabman
+            const result = await this.followModel
+                .aggregate([
+                    {$match: {subscriber_id: subscriber_id}},
+                    {$sort: {createdAt: -1}},
+                    {$skip: (page - 1) * limit},
+                    {$limit: limit},
+                    {
+                        $lookup: {
+                            from: "members",
+                            localField: "follow_id",
+                            foreignField: "_id",
+                            as: "follow_member_data",
+                        },
+                    },
+                    { $unwind: "$follow_member_data"}, // array ko'rinishidagi data ni object ga o'zgartirib beradi.
+                ])
+                .exec();
+            assert.ok(result, Definer.follow_err3);
+            return result;
         } catch (err) {
             throw err;
         }
