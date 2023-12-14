@@ -2,7 +2,6 @@ const BoArticleModel = require("../schema/bo_article.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const {shapeIntoMongooseObjectId, board_id_enum_list} = require("../lib/config");
-const {cat} = require("require/example/shared/dependency");
 const Member = require("./Member");
 
 class Community {
