@@ -75,10 +75,35 @@ class Follow {
                     )
                     .exec();
             }
+            return true;
         } catch (err) {
             throw err;
         }
     };
+
+    // database va schema_model bn ishlayotgani uchun async ko'rishida unsubscribeData method yaratib oldim
+    async unsubscribeData(member, data) { // unga member va data qiymatlarini path qilyabman
+        try {
+            const subscriber_id = shapeIntoMongooseObjectId(member._id); // member ni ichida id element i bolsa olib shape qil deyabman
+            const follow_id = shapeIntoMongooseObjectId(data.mb_id); // request bodyni ichidan mb_id elementi ni olib follow_id ini shape qilib olyabman
+
+            // follow_schema modelni findOneAndDelete static methodini chaqirib olyabman  va chiqan natijani result ga tegnlayabman
+            const result = await this.followModel.findOneAndDelete({
+                follow_id: follow_id, // follow_id ni yuqoridagi follow_idga tengla olyabman
+                subscriber_id: subscriber_id, //subscriber_id ni yuqoridagi subscriber_id ga tenglab olyabman
+            });
+            assert.ok(result, Definer.general_err1);
+
+            await this.modifyMemberFollowCounts(follow_id, "subscriber_change", -1); // birinchisiga follow qilmoqchi bo'lgan id ni  kirityabman
+            await this.modifyMemberFollowCounts(subscriber_id, "follow_change", -1); // o'zimni id ni kirityabman
+
+            return true;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
 }
 
 module.exports = Follow;

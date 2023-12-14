@@ -21,4 +21,23 @@ followController.subscribe = async (req, res) => {
         console.log(`ERROR, cont/subscribe, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
+};
+
+
+// database va mongoose bn aloqada bo'lgani uchun async shakilda followController  unsubscribe methodini yaratyabman
+followController.unsubscribe = async (req, res) => {
+    try {
+        console.log("GET cont/unsubscribe");
+        assert.ok(req.member, Definer.auth_err5);
+
+        const follow = new Follow(); // follow_service modeldan instance olib follow objectini hosil qilib oldik
+
+        // follow objectini unsubscribeData methodini chaqirib olyabman unga req.member va req.body ni qiymatlarini path qilyabman va natijani resultga tenglayman
+        const result = await follow.unsubscribeData(req.member, req.body);  // req.body qismida subscriber ni ma'lumotlarini path qilyabman (kimga subscribe bo'lgani)
+        res.json({state: "success", data: result});
+
+    } catch (err) {
+        console.log(`ERROR, cont/subscribe, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
 }
