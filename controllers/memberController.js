@@ -108,7 +108,6 @@ memberController.getChosenMember = async (req, res) => {
         // member_service modelni ichida getChosenMemberData metodini yaratyabmiz va argument sifatida req.member va id ni path  qilib resultga qaytaryabmiz
         const result = await member.getChosenMemberData(req.member, id);    // req.member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
 
-        // console.log("result::::", result);
 
         // agar resultda data mavjud bolsa  json formatda olyabmiz
         res.json({state: "success", data: result});

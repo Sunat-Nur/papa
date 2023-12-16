@@ -2,7 +2,7 @@ const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");
-const {shapeIntoMongooseObjectId} = require("../lib/config");
+const {shapeIntoMongooseObjectId, lookup_auth_member_following} = require("../lib/config");
 const View = require("./View");
 const memberModel = module.exports;
 
@@ -67,30 +67,26 @@ class Member {
     // getChosenMemberData methodni ni ikkita parametri bor bular member va id
     async getChosenMemberData(member, id) {  // member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
         try {
+            console.log("getChosenMemberData is working");
+            const auth_mb_id = shapeIntoMongooseObjectId(member?._id); // member mavjud bolsa id ni qabul qilib olaman
             id = shapeIntoMongooseObjectId(id); // id ini mongoose o'qiy oladigan formatda shape qilyabmiz
             console.log("member:::", member);
 
-            if (member) { // agar  authenticated  bo'lgan member bolsa ishga tuwur deyabmiz
-                // condition if not seen before.
+            let aggregateQuery = [
+                // match methoda database dan id ini ushbu id ga teng bo'lganini va mb_status active ekanini tekshir deyabiz
+                {$match: {_id: id, mb_status: "ACTIVE"}},
+                {$unset: "mb_password"}, // unset password ni olmaslik uchun ishlatyabmiz
+            ];
 
+            if (member) { // agar  authenticated  bo'lgan member bolsa ishga tuwur deyabmiz
                 //viewChosenItemByMember methodiga (member--kim, id--kimni va group_type member) ni argument sifatida path qilyabmiz
                 await this.viewChosenItemByMember(member, id, "member");
-
+                aggregateQuery.push(lookup_auth_member_following(auth_mb_id, "members"));  // members collectiondan request qilyabdi
             }
-
-            const result = await this.memberModel //  memberSchema modeldan aggregate qilib
-                .aggregate([    // aggregate lowlevel bo'lgani uchun schema modelga bo'ysinmaydi shunga passwordni ham oladi
-
-                    // match methoda database dan id ini ushbu id ga teng bo'lganini va mb_status active ekanini tekshir deyabiz
-                    {$match: {_id: id, mb_status: "ACTIVE"}},
-                    {$unset: "mb_password"}, // unset password ni olmaslik uchun ishlatyabmiz
-
-                    // TODO: check auth member liked the chosen member
-                ])
-                .exec();
+            //  memberSchema modeldan aggregate qilib
+            const result = await this.memberModel.aggregate(aggregateQuery).exec();// yuqorida hosil qilgan aggregationqueryni path qilyabman
 
             assert.ok(result, Definer.general_err2);  // result data dan qaytadigan ma'lumot ni mavjudligini assert(check) qilyabmiz)
-
             // result ni ichida 0 indexdagi qiymatni return qiladi
             return result[0]; //agar result da data mavjud bolsa, agregate natijani array qilib olib beradi
         } catch (err) {

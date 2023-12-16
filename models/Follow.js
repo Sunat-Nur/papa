@@ -165,21 +165,16 @@ class Follow {
 
             // agar authenticate bolgan user mavjud bolsa va request user o'zing follower ro'yxatini request qilyotgan bolsa
             if (member && member._id === inquiry.mb_id) {
-                aggregateQuery.push(lookup_auth_member_following(follow_id));
-            };
+                aggregateQuery.push(lookup_auth_member_following(follow_id, "follows")); // follows collectiondan request qilyabdi
+            }
 
-            const result = await this.followModel // follow_schema modelni chaqirib aggregate methodini ishlatyabman
-                .aggregate(aggregateQuery)
-                .exec();
-
+            const result = await this.followModel.aggregate(aggregateQuery).exec(); // follow_schema modelni chaqirib aggregate methodini ishlatyabman
             assert.ok(result, Definer.follow_err3);
             return result;
         } catch (err) {
             throw err;
         }
     };
-
-
 }
 
 module.exports = Follow;
