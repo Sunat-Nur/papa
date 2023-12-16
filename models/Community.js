@@ -134,7 +134,7 @@ class Community {
             art_id = shapeIntoMongooseObjectId(art_id);
 
             // todo: increase art_views when usen has not seen before
-            if(member) { // agar member mavjud bolsa ya'ni oldin ko'rilga bolsa
+            if(member) { // agar member mavjud bolsa ya'ni oldin ko'rilga bolsa // agar member login bo'lgan member bolsa
                 const member_obj = new Member(); // member_service modeldan inctanse olib member_obj objectini hosil qilib olyabman
                 // member_obj objectini  viewChosenItemByMember methodini chaqirib olyabman va 3 ta qiymatni path qilib umumiy natijani resultga tenglayabman
                 const result = await member_obj.viewChosenItemByMember(member, art_id, "community");

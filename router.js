@@ -144,6 +144,14 @@ router.get(
     followController.getMemberFollowings
 );
 
+router.get(
+    "/follow/followers",
+    memberController.retrieveAuthMember,
+    followController.getMemberFollowers
+);
+
+
+
 
 
 

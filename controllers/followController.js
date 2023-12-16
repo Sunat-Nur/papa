@@ -42,6 +42,8 @@ followController.unsubscribe = async (req, res) => {
     }
 };
 
+
+// database va mongoose bn aloqada bo'lgani uchun async shakilda getMemberFollowings  subscribe methodini yaratyabman
 followController.getMemberFollowings = async (req, res) => {
     try {
         console.log("GET cont/getMemberFollowings");
@@ -55,4 +57,20 @@ followController.getMemberFollowings = async (req, res) => {
         console.log(`ERROR, cont/getMemberFollowings, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
-}
+};
+
+// database va mongoose bn aloqada bo'lgani uchun async shakilda getMemberFollowers  subscribe methodini yaratyabman
+followController.getMemberFollowers = async (req, res) => {
+    try {
+        console.log("GET cont/getMemberFollowers");
+        const follow = new Follow(); // follow_service modeldan instance olib follow objectini hosil qilib oldik
+
+        // yaratgan follow object ini getMemberFollowersData methodini chaqirib olyabman va unga req.member va query ni path qilib natijani resultga tenglayabman
+        const result = await follow.getMemberFollowersData(req.member, req.query);
+        res.json({state: "success", data: result});
+
+    } catch (err) {
+        console.log(`ERROR, cont/getMemberFollowers, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+};

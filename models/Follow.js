@@ -1,6 +1,6 @@
 const Definer = require("../lib/mistake");
 const assert = require("assert");
-const {shapeIntoMongooseObjectId, board_id_enum_list} = require("../lib/config");
+const {shapeIntoMongooseObjectId, board_id_enum_list, lookup_auth_member_following} = require("../lib/config");
 const FollowModel = require("../schema/follow.model");
 const MemberModel = require("../schema/member.model");
 
@@ -105,7 +105,7 @@ class Follow {
         }
     };
 
-
+    // database va schema_model bn ishlayotgani uchun async ko'rishida getMemberFollowingData method yaratib oldim
     async getMemberFollowingData(inquiry) {
         try {
             console.log("getMemberFollowingData is working");
@@ -128,7 +128,7 @@ class Follow {
                             as: "follow_member_data",
                         },
                     },
-                    { $unwind: "$follow_member_data"}, // array ko'rinishidagi data ni object ga o'zgartirib beradi.
+                    {$unwind: "$follow_member_data"}, // array ko'rinishidagi data ni object ga o'zgartirib beradi.
                 ])
                 .exec();
             assert.ok(result, Definer.follow_err3);
@@ -136,7 +136,48 @@ class Follow {
         } catch (err) {
             throw err;
         }
-    }
+    };
+
+    // database va schema_model bn ishlayotgani uchun async ko'rishida getMemberFollowersData method yaratib oldim
+    async getMemberFollowersData(member, inquiry) {
+        try {
+            console.log("getMemberFollowersData is working");
+            const follow_id = shapeIntoMongooseObjectId(inquiry.mb_id), // request inquiry ichidan mb_id elementi ni olib follow_id ini shape qilib olyabman
+                page = inquiry.page * 1, // page ni inquiryni ichidan qabul qilib olib songa aylantirib olyabman
+                limit = inquiry.limit * 1; // limit ni inquiryni ichidan qabul qilib olib songa aylantirib olyabman
+
+            let aggregateQuery = [ //
+                {$match: {follow_id: follow_id}}, // match objectini ishlatib follow_id ni follow_id ga tenglab olyabman
+                {$sort: {createdAt: -1}}, // oxirgidan boshlab
+                {$skip: (page - 1) * limit},
+                {$limit: limit},
+                {
+                    $lookup: {
+                        from: "members",
+                        localField: "subscriber_id",
+                        foreignField: "_id",
+                        as: "subscriber_member_data",
+                    },
+                },
+                {$unwind: "$subscriber_member_data"}, // array ko'rinishidagi data ni object ga o'zgartirib beradi.
+            ];
+            // todo: following followed back to subscriber
+
+            // agar authenticate bolgan user mavjud bolsa va request user o'zing follower ro'yxatini request qilyotgan bolsa
+            if (member && member._id === inquiry.mb_id) {
+                aggregateQuery.push(lookup_auth_member_following(follow_id));
+            };
+
+            const result = await this.followModel // follow_schema modelni chaqirib aggregate methodini ishlatyabman
+                .aggregate(aggregateQuery)
+                .exec();
+
+            assert.ok(result, Definer.follow_err3);
+            return result;
+        } catch (err) {
+            throw err;
+        }
+    };
 
 
 }
