@@ -86,8 +86,8 @@ class Follow {
         try {
             console.log("unsubscribeData is working");
 
-            const subscriber_id = shapeIntoMongooseObjectId(member._id); // member ni ichida id element i bolsa olib shape qil deyabman
-            const follow_id = shapeIntoMongooseObjectId(data.mb_id); // request bodyni ichidan mb_id elementi ni olib follow_id ini shape qilib olyabman
+            const subscriber_id = shapeIntoMongooseObjectId(member._id); // member ni ichida id element i bolsa olib shape qil deyabman // bizni idi
+            const follow_id = shapeIntoMongooseObjectId(data.mb_id); // request bodyni ichidan mb_id elementi ni olib follow_id ini shape qilib olyabman // unfollow qilmoqchi bolgan odam
 
             // follow_schema modelni findOneAndDelete static methodini chaqirib olyabman  va chiqan natijani result ga tegnlayabman
             const result = await this.followModel.findOneAndDelete({

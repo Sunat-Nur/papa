@@ -35,7 +35,7 @@ class Community {
             return await article.save(); // yaratgan article object ni save qilib return qilyabman
         } catch (err) {
             console.log(err);
-            throw new Error(Definer.auth_err1);
+            throw new Error(Definer.mongo_validation_err1);
         }
     };
 

@@ -30,6 +30,14 @@ router.get(
     memberController.retrieveAuthMember, //  oldin view qilganmi va  kim request qiladiganini bilish un retrieveAuthMember ishlatyabman
     memberController.getChosenMember  // memberController da getChosenMember metodini yasayabmn
 );
+
+router.post(
+    "/member-liken",
+    memberController.retrieveAuthMember,
+    memberController.likeMemberChosen // like qilishga target
+);
+
+
 /**********************************
  * Product related routers        *
  **********************************/

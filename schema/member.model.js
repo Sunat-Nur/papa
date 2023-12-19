@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const {member_status_enums, member_type_enums,  ordenary_enums} = require("../lib/config");
+const Schema = mongoose.Schema; // mongoose dan olinadigan schema ni ishlatyabmiz
 
 const memberSchema = new mongoose.Schema({
     // mongoose ni ichidan schema olinyabdi

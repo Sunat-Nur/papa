@@ -4,6 +4,7 @@ const assert = require("assert");
 const bcrypt = require("bcrypt");
 const {shapeIntoMongooseObjectId, lookup_auth_member_following} = require("../lib/config");
 const View = require("./View");
+const Like = require("./Like");
 const memberModel = module.exports;
 
 
@@ -26,7 +27,7 @@ class Member {
                 result = await new_member.save();    // u objectni ichida save methodan foydalangan holda memberni hosil qilamiz
             } catch (mongo_err) {
                 console.log(mongo_err);
-                throw new Error(Definer.auth_err1); //o'izmiz xoxlagan errorni hosil qilyabmiz
+                throw new Error(Definer.mongo_validation_err1); //o'izmiz xoxlagan errorni hosil qilyabmiz
 
             }
             result.mb_password = ""; //passwordni stringa o'zgarturyabmiz, parolni ko'rmaslik uchun
@@ -133,7 +134,41 @@ class Member {
         } catch (err) {
             throw err;
         }
-    }
+    };
+
+    // database va schema_model bn ishlayotgani uchun async ko'rishida likeChosenItemByMember method yaratib oldim
+    // likeChosenItemByMember methodni ni 3 ta parametri bor bular member va like_ref_id va  group_type ularni define qismida path qilyabman
+    async likeChosenItemByMember(member, like_ref_id, group_type) {
+        try {
+            console.log("likeChosenItemByMember is working");
+            like_ref_id = shapeIntoMongooseObjectId(like_ref_id);
+            const mb_id = shapeIntoMongooseObjectId(member._id); // memberning id isi mavjud bolsa uni shape qilib olyabman
+
+            const like = new Like(mb_id); // like service modeldan instance olib member object ni hosil qilyabman unga mb_id ni path qilyabman
+            // like object ini ichida validateTargetItem methodini chaqirib olyabman un ga like_ref_id va group_type ni path qilyabman
+            const isValid = await like.validateTargetItem(like_ref_id, group_type);
+            console.log("isValid::::::", isValid);
+            assert.ok(isValid, Definer.general_err2);   // att: there is no data with that params
+
+            // todo doesExist
+            const doesExist = await like.checkLikeExistence(like_ref_id); // like objecttimizni checkLikeExistence methodini chaqirib olyabman unga like_ref_id ni path qilyabman
+            console.log("doesExist:::::", doesExist);
+
+            let data = doesExist  // natijani data ga tenlashtirib,
+                ? await like.removeMemberLike(like_ref_id, group_type)  //doesExist mavjud bolsa deb like object ini removeMemberLike methodini chaqirib ref_id va g_tyep ni path qilyabman
+                : await like.insertMemberLike(like_ref_id, group_type); //doesExist mavjud bolmasa deb like object ini insertMemberLike methodini chaqirib ref_id va g_tyep ni path qilyabman
+            assert.ok(data, Definer.general_err1);
+
+            const result = {
+                like_group: data.like_group,
+                like_ref_id: data.like_ref_id,
+                like_status: doesExist ? 0 : 1,
+            };
+            return result;
+        } catch (err) {
+            throw err;
+        }
+    };
 }
 
 

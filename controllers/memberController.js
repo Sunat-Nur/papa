@@ -118,6 +118,27 @@ memberController.getChosenMember = async (req, res) => {
 };
 
 
+// database va mongoose bn aloqada bo'lgani uchun async shakilda likeMemberChosen   methodini yaratyabman
+memberController.likeMemberChosen = async (req, res) => {
+    try {
+        console.log("POST cont/likeMemberChosen");
+        assert.ok(req.member, Definer.auth_err5); // faqat authenticat bolgan userlar ishlata olishi uchun check qilyabman
+        const member = new Member(); // member_service modeldan instance olib yangi member object yaratyabmiz
+        like_ref_id = req.body.like_ref_id; // like_ref_id ni request bodyni ichidan qabul qilib olyabman va uni like_ref_id nomi bn nomlayabman
+        group_type = req.body.group_type; // qanday turdagi productni like qilishni belgilab olyabman uni req.bodyni ichidan qabul qilib olyabman va group_type nomi bn send qilyabman
+
+        console.log("like_ref_id:", like_ref_id);
+        console.log("group_type:", group_type);
+
+        const result = await member.likeChosenItemByMember(req.member, like_ref_id, group_type);    // req.member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
+        res.json({state: "success", data: result});
+    } catch (err) {
+        console.log(`ERROR, cont/likeMemberChosen, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+};
+
+
 // token orqali hosil qilyabmiz
 memberController.retrieveAuthMember = (req, res, next) => {  // next kengi middleware ga o'tkazadi
     try {
