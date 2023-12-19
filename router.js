@@ -34,7 +34,7 @@ router.get(
 router.post(
     "/member-liken",
     memberController.retrieveAuthMember,
-    memberController.likeMemberChosen // like qilishga target
+    memberController.likenMemberChosen // like qilishga target
 );
 
 

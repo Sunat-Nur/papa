@@ -1,4 +1,5 @@
 const MemberModel = require("../schema/member.model");
+const LikeModel = require("../schema/like.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");

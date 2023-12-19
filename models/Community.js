@@ -92,7 +92,7 @@ class Community {
                 // agar bo_id all ga teng bolmasa, inquiry ni bo_id isiga teng bolsin albatda art_status faqat active bolganlarnini retriew qib bersin
                 : {bo_id: inquiry.bo_id, art_status: "active"};
 
-            inqury.limit *= 1; // kirib kelyotgan inquiry.limit ni songa aylantirib olyabman
+            inquiry.limit *= 1; // kirib kelyotgan inquiry.limit ni songa aylantirib olyabman
             inquiry.page *= 1;// kirib kelyotgan inquiry.page ni ham songa aylantirib olyabman
 
             // sort object ini yaratib oldim
