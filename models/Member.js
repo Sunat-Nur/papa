@@ -2,7 +2,7 @@ const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");
-const {shapeIntoMongooseObjectId, lookup_auth_member_following} = require("../lib/config");
+const {shapeIntoMongooseObjectId, lookup_auth_member_following, lookup_auth_member_liked} = require("../lib/config");
 const View = require("./View");
 const Like = require("./Like");
 const memberModel = module.exports;
@@ -82,6 +82,7 @@ class Member {
             if (member) { // agar  authenticated  bo'lgan member bolsa ishga tuwur deyabmiz
                 //viewChosenItemByMember methodiga (member--kim, id--kimni va group_type member) ni argument sifatida path qilyabmiz
                 await this.viewChosenItemByMember(member, id, "member");
+                aggregateQuery.push(lookup_auth_member_liked(auth_mb_id));  // members collectiondan request qilyabdi
                 aggregateQuery.push(lookup_auth_member_following(auth_mb_id, "members"));  // members collectiondan request qilyabdi
             }
             //  memberSchema modeldan aggregate qilib

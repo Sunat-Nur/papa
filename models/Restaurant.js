@@ -1,5 +1,5 @@
 const assert = require("assert");
-const {shapeIntoMongooseObjectId} = require("../lib/config");
+const {shapeIntoMongooseObjectId, lookup_auth_member_liked} = require("../lib/config");
 const Definer = require("../lib/mistake");
 const MemberModel = require("../schema/member.model");
 const Member = require("./Member")
@@ -55,7 +55,7 @@ class Restaurant {
 
             // mongodb ni limit buyrug'i asosida shakilantirib qiymatini queridan keladigan data objectining limit elementiga tenglashtirib olamiz va aggrigationga push qilamiz
             aggregationQuery.push({$limit: data.limit});
-            // TODO: check auth member liked the chosen target
+            aggregateQuery.push(lookup_auth_member_liked(auth_mb_id));
 
             // tepada  biz aggregationQuery array ni hosil qilib oldik, maqsad schema modelimizni aggregation method orqali ishlatyotganda path qilish maqsadida ishlatyabmiz
 

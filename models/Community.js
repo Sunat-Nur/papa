@@ -1,7 +1,7 @@
 const BoArticleModel = require("../schema/bo_article.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
-const {shapeIntoMongooseObjectId, board_id_enum_list} = require("../lib/config");
+const {shapeIntoMongooseObjectId, board_id_enum_list, lookup_auth_member_liked} = require("../lib/config");
 const Member = require("./Member");
 
 class Community {
@@ -66,6 +66,7 @@ class Community {
                         },
                     },
                     {$unwind: "$member_data"}, //olingan array ko'rinishidagi datani object ko'rinishiga o'zgartirib beradi
+                    lookup_auth_member_liked(auth_mb_id),
                 ])
                 .exec();
             assert.ok(mb_id, Definer.article_err1);
@@ -115,7 +116,7 @@ class Community {
                         },
                     },
                     {$unwind: "$member_data"}, //olingan array ko'rinishidagi datani object ko'rinishiga o'zgartirib beradi
-                    // todo: check auth member liked the chosen target
+                    lookup_auth_member_liked(auth_mb_id),
                 ])
                 .exec();
 

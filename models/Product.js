@@ -1,5 +1,5 @@
 const assert = require("assert");
-const {shapeIntoMongooseObjectId} = require("../lib/config");   // Product Schemani export qilib oldik.
+const {shapeIntoMongooseObjectId, lookup_auth_member_liked} = require("../lib/config");   // Product Schemani export qilib oldik.
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
 const Member = require("./Member");  // mem_service modelni pro_service modelni ichida chaqirib olyabmiz
@@ -45,6 +45,7 @@ class Product {
                 .aggregate([  // aggregation doim array qaytaradi
                     {$match: match}, // match ni path qilyabmn,  tepada berilgan match objectlarni bitta qilib olyabman
                     {$sort: sort}, // yuqoridagi sort object ni path qilyabmn
+                    lookup_auth_member_liked(auth_mb_id),
 
                     // {$skip: (data.page * 1 - 1) * data.limit},
                     // {$limit: data.limit * 1},
@@ -84,8 +85,8 @@ class Product {
             // bu yerda result ni olib product.schema modeldan foydalanib aggregate qilyabmiz
             const result = await this.productModel //buni static aggregate methodi dan foydalanyabman
                 .aggregate([   //agrigation ga bitta pipline berilyabid. type  array
-                    {$match: {_id: id, product_status: "PROCESS"}} //faqat statusi process bo'lgan productllarni olgin deyabmiz
-                    // TODO: check auth member product likes or not
+                    {$match: {_id: id, product_status: "PROCESS"}}, //faqat statusi process bo'lgan productllarni olgin deyabmiz
+                    lookup_auth_member_liked(auth_mb_id),
                 ])
                 .exec();
             // keladigan datani mavjudligini tekshiryabmiz agar mavjud bo'lmasa error berilyabdi
