@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const router = require("./router");
 const router_bssr = require("./router_bssr");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 
@@ -15,9 +16,15 @@ const store = new MongoDBStore({          // mongodbstore class daan instance ol
 
 //1: Kirish code
 app.use(express.static("public"));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));  //object ichida bolsa deb
 app.use(express.static('js'));
+app.use(cors({
+        credentials: true,
+        origin: true,
+    })
+);
 app.use(cookieParser()); //
 
 // 2: Session code
