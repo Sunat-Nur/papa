@@ -10,64 +10,56 @@ class Restaurant {
     constructor() {
         this.memberModel = MemberModel; // schema modelni chaqirib ishlatyabmiz
     }
-
-    // database va schema_model bn ishlayotgani uchun async ko'rishida getRestaurantsData method yaratib oldim
-    async getRestaurantsData(member, data) { //getRestaurantsData method member va data parametr qiymatarni path qilyabman
+    async getRestaurantsData(member, data) { // member va data parametrlarini qabul qiladi.
         try {
-            // kim login bo'lyotgani,  member objectning ichida  member?_id bo'lsa mongoseogbejctID ga o'zgartirib ber deyabmiz
-            const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
-            // shape qilishdan maqsad member_schema modelni ichida query qilayotganda ishlataman
+            const auth_mb_id = shapeIntoMongooseObjectId(member?._id);  //kim login bulib, req qilayotgan bulsa,shuni member_id kerak.
+            //member?._id mavjud bulsa.
+            let match = {mb_type: "RESTAURANT", mb_status: "ACTIVE"}; //match uzgaruvchi objectni hosil qilib olayopman
+            // enum mb_type: RESTAURANT bulgan, statusi ACTIVE bulgan restaurantlarni olib ber deyopman. ACTIVE bulmaganlarini qabul qilmaydi.
 
-            // pasta serach qilish maqsadida match o'zgaruvchi objectni hosil qilyabmiz
-            let match = {mb_type: "RESTAURANT", mb_status: "ACTIVE"}; // va mb_type ga restaurant enum qiymatini va statusini kirityabmiz
-            let aggregationQuery = []; // aggregationQuery arrayni hosil qilyabmiz
-
-            //past string ko'rinishda keladigan data ni  songa ko'rinishida olyabmi,  va kirib kelgan  page larni 1 * ga ko'paytirib olyabmiz
-            data.limit = data["limit"] * 1;
+            //aggregationQuery arrayini hosil qilib,
+            //sababi aggregate ichida query ishlatayopmiz shuyerga pass qilish maqsadida yozayopman.
+            let aggregationQuery = [];
+            data.limit = data["limit"] * 1; //data limiti string kurinishi kelayopti biz songa aylantib olamiz.
             data.page = data["page"] * 1;
-
-            // pasta data ni ichida keladigan order qiymatlariga switch ishlatyabmiz
-            switch (data.order) {
-                case "top":   // bu faqat top rest lar uchun
-                    match["mb_top"] = "Y"; // enum qiymatlarni ko'rsatyabmiz
-
-                    // match objectni mongodb match buyrug'iga tenglashtirib aggregationQuery array bo'lgani uchun push qilyabmiz
-                    aggregationQuery.push({$match: match});
-                    aggregationQuery.push({$sample: {size: data.limit}}); // sample sintaxsiz restaurantlarni ixtiyoriy random qilib, ob beradi.
-                    // va aggregationQuery ga push qilyabmiz
+//data.order orqali bitta get rest API bn barcha restarantlar,top rest,zo'r rest olaman , alohida yozib utirmayman.
+            switch(data.order) { //datani ichida kelayotgan orderning qiymatiga swich qilayopman.
+                case 'top':      // agar top restaurantlar suralganda ordering bulmasligi kerak.
+                    match["mb_top"] = "Y"; //matchni ichida mb_topning qiymatida,(enum qiymat) YES bulishi kerak.
+                    aggregationQuery.push({ $match: match }); // array bulgani un (match objectimni) mongoDbni match buyrug'iga tenglashtib push qilayopman.
+                    aggregationQuery.push ({ $sample: {size: data.limit } }); // arrayga sample syntaxni kiritib,random shaklini tanlaydi bizning limitimizdan kelib chiqqan  holada.
+                    // data.limitga bosh sahafadagi 4ta resta berilgan bulsa, 4 ta rest ololadi.agarda 8 ta bulsa,4tasini olib keyingi pagega qolgan qismini utkazib yuboradi.
                     break;
-                case "random":
-                    // match objectni mongodb match buyrug'iga tenglashtirib aggregationQuery array bo'lgani uchun push qilyabmiz
-                    aggregationQuery.push({$match: match});
-                    aggregationQuery.push({$sample: {size: data.limit}});  // sample sintaxsiz top bo'lmagan restaurantlarni ixtiyoriy random qilib, ob beradi.
-                    // va aggregationQuery ga push qilyabmiz
+                case "random": // agar random string kelsa, u holda bu operatsiyani amalga oshir.
+                    aggregationQuery.push({ $match: match }); //birxil restarantlar chiqishidan qattiy nazar(like,viewlardan qattiy nazar) harbiriga birxil huquq beramiz.
+                    aggregationQuery.push ({ $sample: {size: data.limit } });
                     break;
-                default:
-                    // match objectni mongodb match buyrug'iga tenglashtirib aggregationQuery array bo'lgani uchun push qilyabmiz
-                    aggregationQuery.push({$match: match}); //aggregationQuery ichida match sinatax ucun match object ni provide qilamiz
-                    const sort = {[data.order]: -1}; // sort object ni ichida array ko'rinishidagi sintaxni hosil qilib uning ichidagi data qiymatni olib va objectning elementiga tenglashtirib beryabdi
-                    aggregationQuery.push({$sort: sort});  //aggregationQuery ichida  sort object ni sort sintax ga tenglashtirib push qilyabmiz
-                    break;
+                default:     // agar (default) hollarda,
+                    aggregationQuery.push({ $match: match }); //aggregationQueryni ichiga match syntax un match objecti provite qilyopmiz.
+                    const sort = {[data.order]: -1};    // sort objectini ichida,(elementlar harxil qiymatni hosil qilib olishi mumkin) shuning un array kurinishidagi syntaxni hosil qilib olayopman,
+                    // eng oxirgi qushilgan restaurantlar.
+                    aggregationQuery.push({ $sort: sort }); //sort syntaxga sort obejectimizni tenglashtirib olamiz.
+                    break;  //biz nima uchun order qiymatiga top bn randomni kiritishimiz kerak?
             }
-            // har 3 lasiga tegishli bolgan aggregationQuery
-            aggregationQuery.push({$skip: (data.page - 1) * data.limit}) //datani ichidan page qiymatni qabul qilyabdi
-            // agar ikkinchi pageda har bir pageda 8 ta query bolsa boshlang'ich 8 ta qiymatni skip qil deyabmiz
 
-            // mongodb ni limit buyrug'i asosida shakilantirib qiymatini queridan keladigan data objectining limit elementiga tenglashtirib olamiz va aggrigationga push qilamiz
-            aggregationQuery.push({$limit: data.limit});
-            aggregateQuery.push(lookup_auth_member_liked(auth_mb_id));
+            aggregationQuery.push({$skip: (data.page - 1) * data.limit});// har 3lasiga tegishli bulgan Quary nimalardan iborat.
+            //datani ichidan 1chi page qiymatni qabul qilib, har bitta qilgan req nechta data kelishi kerakligini anglatadi.
+            aggregationQuery.push({ $limit: data.limit }); // mongodbni limit buyruqi asosida shakillantirib olayopmiz.
+            //qiymati bulsa,Querydan kelayotdan DATA objectining limit elementiga tenglashtirib olayopmiz.
 
-            // tepada  biz aggregationQuery array ni hosil qilib oldik, maqsad schema modelimizni aggregation method orqali ishlatyotganda path qilish maqsadida ishlatyabmiz
 
-            // by yerda member.schema modeldan aggrigate qilyabmiz va bu aggrigate qiymatiga aggrigationQueriyni argument sifatida provide qilamiz, va resultga yuklaymiz
-            const result = await this.memberModel.aggregate(aggregationQuery)
-                .exec();
-            assert.ok(result, Definer.general_err1); // agar result objecti qiymati movjud bolsa return qil bomasa error ni ko'rsat deyabmiz
-            return result; // agar object qiymati mavjud bola return qil deyabmiz
+            //TODO: check auth member  likes the chosen target. (harbir restarantga like bosganmizmi yuqmi?) metodini yasaymn.
+
+            const result = await this.memberModel.aggregate(aggregationQuery).exec();
+            // memberSchema modeldan aggregate qilamiz, va aggregatening qiymatiga aggregationQueryni argument sifatida past qildim.
+            assert.ok(result, Definer.general_err1);
+            return result;
+
         } catch (err) {
             throw err;
         }
-    }
+
+    };
 
     // database va schema_model bn ishlayotgani uchun async ko'rishida getChosenRestaurant method yaratib oldim
     async getChosenRestaurantData(member, id) {  //getChosenRestaurantData methodiga 2 parametrni path qilyabman
