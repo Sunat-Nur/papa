@@ -14,7 +14,7 @@ class Restaurant {
         try {
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id);  //kim login bulib, req qilayotgan bulsa,shuni member_id kerak.
             //member?._id mavjud bulsa.
-            let match = {mb_type: "RESTAURANT", mb_status: "ACTIVE"}; //match uzgaruvchi objectni hosil qilib olayopman
+            const match = {mb_type: "RESTAURANT", mb_status: "ACTIVE"}; //match uzgaruvchi objectni hosil qilib olayopman
             // enum mb_type: RESTAURANT bulgan, statusi ACTIVE bulgan restaurantlarni olib ber deyopman. ACTIVE bulmaganlarini qabul qilmaydi.
 
             //aggregationQuery arrayini hosil qilib,
@@ -22,7 +22,7 @@ class Restaurant {
             let aggregationQuery = [];
             data.limit = data["limit"] * 1; //data limiti string kurinishi kelayopti biz songa aylantib olamiz.
             data.page = data["page"] * 1;
-//data.order orqali bitta get rest API bn barcha restarantlar,top rest,zo'r rest olaman , alohida yozib utirmayman.
+            //data.order orqali bitta get rest API bn barcha restarantlar,top rest,zo'r rest olaman , alohida yozib utirmayman.
             switch(data.order) { //datani ichida kelayotgan orderning qiymatiga swich qilayopman.
                 case 'top':      // agar top restaurantlar suralganda ordering bulmasligi kerak.
                     match["mb_top"] = "Y"; //matchni ichida mb_topning qiymatida,(enum qiymat) YES bulishi kerak.
@@ -49,6 +49,7 @@ class Restaurant {
 
 
             //TODO: check auth member  likes the chosen target. (harbir restarantga like bosganmizmi yuqmi?) metodini yasaymn.
+            aggregationQuery.push(lookup_auth_member_liked(auth_mb_id));
 
             const result = await this.memberModel.aggregate(aggregationQuery).exec();
             // memberSchema modeldan aggregate qilamiz, va aggregatening qiymatiga aggregationQueryni argument sifatida past qildim.

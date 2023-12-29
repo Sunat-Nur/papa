@@ -125,7 +125,7 @@ memberController.likenMemberChosen = async (req, res) => {
         assert.ok(req.member, Definer.auth_err5); // faqat authenticat bolgan userlar ishlata olishi uchun check qilyabman
 
         const member = new Member(); // member_service modeldan instance olib yangi member object yaratyabmiz
-        let { like_ref_id, group_type } = req.body;// qanday turdagi productni like qilishni belgilab olyabman uni req.bodyni ichidan qabul qilib olyabman va group_type nomi bn send qilyabman
+        const { like_ref_id, group_type } = req.body;// qanday turdagi productni like qilishni belgilab olyabman uni req.bodyni ichidan qabul qilib olyabman va group_type nomi bn send qilyabman
 
         const result = await member.likeChosenItemByMember(req.member, like_ref_id, group_type);    // req.member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
         res.json({state: "success", data: result});

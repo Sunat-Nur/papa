@@ -11,7 +11,7 @@ const Restaurant = require("../models/Restaurant")
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 
-let restaurantController = module.exports;
+const restaurantController = module.exports;
 
 restaurantController.getRestaurants = async (req, res) => {
     try {
