@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema(
         order_status: {
             type: String,
             required: false,  // default qiymat kiritganimiz uchun required false berdik
-            default: "PAUSED",
+            default: "PROCESS",
             enum: {
                 values: order_status_enums,
                 message: "{VALUE} is not among permitted values",
