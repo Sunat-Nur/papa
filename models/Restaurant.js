@@ -48,7 +48,7 @@ class Restaurant {
             //qiymati bulsa,Querydan kelayotdan DATA objectining limit elementiga tenglashtirib olayopmiz.
 
 
-            //TODO: check auth member  likes the chosen target. (harbir restarantga like bosganmizmi yuqmi?) metodini yasaymn.
+            //: check auth member  likes the chosen target. (harbir restarantga like bosganmizmi yuqmi?) metodini yasaymn.
             aggregationQuery.push(lookup_auth_member_liked(auth_mb_id));
 
             const result = await this.memberModel.aggregate(aggregationQuery).exec();

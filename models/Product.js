@@ -91,7 +91,7 @@ class Product {
                 .exec();
             // keladigan datani mavjudligini tekshiryabmiz agar mavjud bo'lmasa error berilyabdi
             assert.ok(result, Definer.general_err1);
-            return result;
+            return result[0];
             // agar mavjud bo'lsa result ni return qil deyabmiz va u getChosenProduct cotrollerga boradi
         } catch (err) {
             throw err;
