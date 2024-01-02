@@ -127,6 +127,7 @@ class Order {
     // database va schema_model bn ishlayotgani uchun async ko'rishida getMyOrdersData method yaratib oldim
     async getMyOrdersData(member, query) { // va bu methodga member  va queryni qiymatlarni agument sifatida path qilyabman
         try { // agar mb ning id isi mavjud bolsa mb_id ini qabul qilib shape qilyabman database bn itegratsiya uchun
+            console.log("getMyOrdersData is  working");
             const mb_id = shapeIntoMongooseObjectId(member._id);
             let order_status;
 
