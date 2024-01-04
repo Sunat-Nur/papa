@@ -32,21 +32,14 @@ class Order {
                 delivery_cost = 2;
                 order_total_amount += delivery_cost;
             }
-
-            // saveOrderData methodini yaratib olyabman
             const order_id = await this.saveOrderData( // 3 xil argument qiymat kiritib unlarni  order_id ga tenglayabman
                 order_total_amount,
                 delivery_cost,
                 mb_id
             );
             console.log("order_id:::::", order_id);
-
             //todo order items creation
-
-            // database schema_model bilan birga ishlaydigani uchun await method shaklida yaratib oldim va order_id va data ni path qilib oldim
             await this.recordOrderItemsData(order_id, data);   // orderItem ni creat qilish shu yerdan boshlandi
-
-
             return order_id;
         } catch (err) {
             throw err;
@@ -63,10 +56,8 @@ class Order {
                 order_delivery_cost: delivery_cost,
                 mb_id: mb_id,
             });
-
             const result = await new_order.save(); // new_order objectinig save methodi yaratib natinijani resultga tenlayabman
             assert.ok(result, Definer.order_err1);
-
             return result._id;
         } catch (err) {
             // mongoose ko'rsatadigan errorlar farq qilganligi sababli ularni cutimize qilish maqsadida o'zimiz error larni qayta nomlayabmiz

@@ -80,6 +80,7 @@ class Community {
     // database va schema_model bn ishlayotgani uchun async ko'rishida saveArticleData methodini yaratib oldim
     async getArticlesData(member, inquiry) { // unga parametrni path qilyabman. ( inquiry dan bo_id, page va limit kelishi kerak)
         try {
+            console.log("getArticlesData is here");
             // member ninng ichidagi id dan shaping qilib olyabman
             const auth_mb_id = shapeIntoMongooseObjectId(member?._id); // agar member mavjud bolsa uni idisini olib shaping qil deyabman
 
