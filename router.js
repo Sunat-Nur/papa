@@ -97,7 +97,7 @@ router.post(
  **********************************/
 
 router.post(
-    "/community/imgae",
+    "/community/image",
     uploader_community.single("community_image"), // upload qiladigan rasmni single deb qoydim
     communityController.imageInsertion
 );
