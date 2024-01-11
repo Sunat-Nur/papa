@@ -76,7 +76,7 @@ memberController.createToken = (result) => {  //result object hisoblanadi
             expiresIn: "6h",
         });
 
-        assert.ok(token, Definer.auth_err4);
+        assert.ok(token, Definer.auth_err3);
         return token;
     } catch (err) {
         throw err;
@@ -91,7 +91,7 @@ memberController.checkMyAuthentication = (req, res) => {
         console.log("token:::", token);
 
         const member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
-        assert.ok(token, Definer.auth_err4);
+        assert.ok(token, Definer.auth_err3);
 
         res.json({state: 'success', data: member});
     } catch (err) {
@@ -122,15 +122,29 @@ memberController.getChosenMember = async (req, res) => {
 memberController.likenMemberChosen = async (req, res) => {
     try {
         console.log("POST cont/likeMemberChosen");
-        assert.ok(req.member, Definer.auth_err5); // faqat authenticat bolgan userlar ishlata olishi uchun check qilyabman
+        assert.ok(req.member, Definer.auth_err4); // faqat authenticat bolgan userlar ishlata olishi uchun check qilyabman
 
         const member = new Member(); // member_service modeldan instance olib yangi member object yaratyabmiz
-        const { like_ref_id, group_type } = req.body;// qanday turdagi productni like qilishni belgilab olyabman uni req.bodyni ichidan qabul qilib olyabman va group_type nomi bn send qilyabman
+        const {like_ref_id, group_type} = req.body;// qanday turdagi productni like qilishni belgilab olyabman uni req.bodyni ichidan qabul qilib olyabman va group_type nomi bn send qilyabman
 
         const result = await member.likeChosenItemByMember(req.member, like_ref_id, group_type);    // req.member---- kim requstni qilyabdi ? id--- kimni data sini ko'rmoqchimiz ?
         res.json({state: "success", data: result});
     } catch (err) {
         console.log(`ERROR, cont/likeMemberChosen, ${err.message}`);
+        res.json({state: "fail", message: err.message});
+    }
+};
+
+memberController.updateMember = async (req, res) => {
+    try {
+        console.log("POST, cont/updateMember");
+        assert.ok(req.member, Definer.auth_err1);
+        const member = new Member();
+        const result = await member.updateMemberData(req.member?._id, req.body, req.file);
+        console.log("result", result);
+        res.json({state: "success", data: result});
+    } catch (err) {
+        console.log(`ERROR, cont/updateMember, ${err.message}`);
         res.json({state: "fail", message: err.message});
     }
 };

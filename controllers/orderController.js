@@ -9,7 +9,7 @@ const orderController = module.exports;
 orderController.createOrder = async (req, res) => {
     try {
         console.log("POST: cont/createOrder")
-        assert.ok(req.member, Definer.auth_err5);
+        assert.ok(req.member, Definer.auth_err4);
 
         const order = new Order(); // order_service modelda instance olib order object yartib oldim
 
@@ -26,7 +26,7 @@ orderController.createOrder = async (req, res) => {
 orderController.getMyOrders = async (req, res) => {  // faqat authenticated bolgan userlar uchun     // defination qismi
     try {
         console.log("POST: cont/getMyOrders");
-        assert.ok(req.member, Definer.auth_err5);
+        assert.ok(req.member, Definer.auth_err4);
 
         const order = new Order(); // order_service model dan instan olib order objectini hosil qilyabman
 
@@ -45,7 +45,7 @@ orderController.getMyOrders = async (req, res) => {  // faqat authenticated bolg
 orderController.editChosenOrder = async (req, res) => { // va degfine qismida req, va res ni path qilyabman
     try {
         console.log("POST: cont/editChosenOrder");
-        assert.ok(req.member, Definer.auth_err5);
+        assert.ok(req.member, Definer.auth_err4);
 
         const order = new Order(); // order_service model dan instan olib order objectini hosil qilyabman
 

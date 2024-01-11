@@ -68,6 +68,15 @@ router.get(
 );
 
 
+
+router.post(
+    "/member/update",
+    memberController.retrieveAuthMember,
+    uploader_member.single("mb_image"),
+    memberController.updateMember // like qilishga target
+);
+
+
 /**********************************
  * order related routers        *
  **********************************/

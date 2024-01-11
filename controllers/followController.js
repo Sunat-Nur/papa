@@ -9,7 +9,7 @@ const followController = module.exports;
 followController.subscribe = async (req, res) => {
     try {
         console.log("GET cont/subscribe");
-        assert.ok(req.member, Definer.auth_err5);
+        assert.ok(req.member, Definer.auth_err4);
 
         const follow = new Follow(); // follow_service modeldan instance olib follow objectini hosil qilib oldik
 
@@ -28,7 +28,7 @@ followController.subscribe = async (req, res) => {
 followController.unsubscribe = async (req, res) => {
     try {
         console.log("GET cont/unsubscribe");
-        assert.ok(req.member, Definer.auth_err5);
+        assert.ok(req.member, Definer.auth_err4);
 
         const follow = new Follow(); // follow_service modeldan instance olib follow objectini hosil qilib oldik
 
