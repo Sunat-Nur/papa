@@ -81,6 +81,7 @@ io.on("connection", function (socket) { // ma'nosi ulangan client birinchi shu y
         console.log("createMsg", data);
         io.emit("newMsg", data);
     });
+
     // socket.emit(); // ulangan user uchun yoziladigan xabar
     // socket.broadcast.emit(); //  ulangan user dan tashqari qolgan useers uchun yoziladigan xabar
     // io.emit() // for all users
