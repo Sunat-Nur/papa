@@ -1,4 +1,5 @@
 console.log("web serverni boshladik");
+const http = require("http");
 const express = require("express");
 const app = express();
 const router = require("./router");
@@ -20,11 +21,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));  //object ichida bolsa deb
 app.use(express.static('js'));
-app.use(cors({
-        credentials: true,
-        origin: true,
-    })
-);
+app.use(cors({credentials: true, origin: true,}));
 app.use(cookieParser()); //
 
 // 2: Session code
@@ -42,7 +39,6 @@ app.use(                                       // app use  middleware, sessionni
     })
 );
 
-
 app.use(function (req, res, next) {
     res.locals.member = req.session.member;
     next();
@@ -55,11 +51,39 @@ app.set("views", "views");
 app.set("view engine", "ejs",);
 
 //4: routing code
-// routerlar qaysi api addresslarni qayerga borishni hal qiladi
-
 app.use("/resto", router_bssr);       // tradition EJS, SSR faqat admin va restarunt userlar uchun ishlatiladi
 app.use("/", router);                   // modern, REACT SPA request larni routerga yuborishni sorayabmiz.
-// React shaklda single page aplication
+
+const server = http.createServer(app);
+
+// socket.io backend server
+const io = require("socket.io")(server, {
+    serveClient: false, // client ni serve qilmayabman
+    origin: "*:*", // istalgan port ucun ochiq, ixtiyoriy ulanishi mumkin
+    transport: ["websocket", "xhr-polling"],  // transport protoclini yozyabman
+});
 
 
-module.exports = app;
+let online_users = 0;
+io.on("connection", function (socket) { // ma'nosi ulangan client birinchi shu yerga keladi
+    online_users++;
+    console.log("New user, total:", online_users);
+    socket.emit("greetMsg", {text: "welcome"});
+    io.emit("infoMsg", {total: online_users});
+
+    socket.on("disconnect", function () {
+        online_users--;
+        socket.broadcast.emit("infoMsg", {total: online_users});
+        console.log("client disconnected, total", online_users);
+    });
+
+    socket.on("createMsg", function (data) {
+        console.log("createMsg", data);
+        io.emit("newMsg", data);
+    });
+    // socket.emit(); // ulangan user uchun yoziladigan xabar
+    // socket.broadcast.emit(); //  ulangan user dan tashqari qolgan useers uchun yoziladigan xabar
+    // io.emit() // for all users
+})
+
+module.exports = server;
