@@ -78,57 +78,49 @@ class Community {
 
 
     // database va schema_model bn ishlayotgani uchun async ko'rishida saveArticleData methodini yaratib oldim
-    async getArticlesData(member, inquiry) { // unga parametrni path qilyabman. ( inquiry dan bo_id, page va limit kelishi kerak)
+    async getArticlesData(member, inquiry) {
         try {
-            console.log("getArticlesData is here");
-            // member ninng ichidagi id dan shaping qilib olyabman
-            const auth_mb_id = shapeIntoMongooseObjectId(member?._id); // agar member mavjud bolsa uni idisini olib shaping qil deyabman
+            const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
+            let matches =
+                inquiry.bo_id === "all"
+                    ? { bo_id: { $in: board_id_enum_list }, art_status: "active" }
+                    : { bo_id: inquiry.bo_id, art_status: "active" };
 
-            // matches object ini yaratib olyabman, inquerini ichidagi bo_id qiymatini check qilib olyabman
-            let matches = inquiry.bo_id === "all"  // agar inquiry ni ichidagi bo_id all ga teng bolsa
+            const limit = (inquiry.limit *= 1);
+            const page = (inquiry.page *= 1);
 
-                // bo_id enum dagi array qiymatlari dan biriga teng bolsin va art_status faqat active bolganlarnini retriew qib bersin
-                ? {bo_id: {$in: board_id_enum_list}, art_status: "active"}
+            const sort = inquiry.order
+                ? { [`${inquiry.order}`]: -1 }
+                : { createdAt: -1 };
 
-                // agar bo_id all ga teng bolmasa, inquiry ni bo_id isiga teng bolsin albatda art_status faqat active bolganlarnini retriew qib bersin
-                : {bo_id: inquiry.bo_id, art_status: "active"};
-
-            inquiry.limit *= 1; // kirib kelyotgan inquiry.limit ni songa aylantirib olyabman
-            inquiry.page *= 1;// kirib kelyotgan inquiry.page ni ham songa aylantirib olyabman
-
-            // sort object ini yaratib oldim
-            const sort = inquiry.order  // inquiry ni ichida order mavjud bolsa
-                ? {[`${inquiry.order}`]: -1} // super string bn inquiry.order ni element sifatida olsin
-                : {createdAt: -1}; // agar mavjud bolmasa eng oxirgi hosil qilganlardan boshlab olib bersin deyabman
-
-            // bo_article schema model dan aggregation qilyabman va chiqan natijani resultga tenglayabman
             const result = await this.boArticleModel
-                .aggregate([ // va aggregation ni ichida arrayni ishlatyabman
-                    {$match: matches},  // birinchi aggregation ni match ini ishlatib match object ini path qilyabman
-                    {$sort: sort}, // sort ga ham hosil qilingan sort object ini path qilyabman
-                    {$skip: (inquiry.page - 1) * inquiry.limit},  //son qilib olingan inquiry ni ichidagi pageni -1 qilib limitaion ga ko'paytirib olyaban
-                    {$limit: inquiry.limit}, // limitni inquiryni ichidagi limit objectiga path qilyabman
+                .aggregate([
+                    { $match: matches },
+                    {
+                        $sort: sort,
+                    },
+                    { $skip: (page - 1) * limit },
+                    { $limit: limit },
                     {
                         $lookup: {
-                            from: "members",  // members collection ni ichidan qaysi dataset ga tenglash tirishni ko'rsatyabman
-                            localField: "mb_id",  // yuqoridagi qiymatdan izla deyabman
+                            from: "members",
+                            localField: "mb_id",
                             foreignField: "_id",
-                            as: "member_data", // qandey nom bn save qilishni eytyabman
+                            as: "member_data",
                         },
                     },
-                    {$unwind: "$member_data"}, //olingan array ko'rinishidagi datani object ko'rinishiga o'zgartirib beradi
+                    { $unwind: "$member_data" },
                     lookup_auth_member_liked(auth_mb_id),
                 ])
                 .exec();
 
-            console.log("result::::", result);
-            assert.ok(auth_mb_id, Definer.article_err3);
+            assert.ok(result, Definer.article_err3);
 
             return result;
         } catch (err) {
             throw err;
         }
-    };
+    }
 
     // database va schema_model bn ishlayotgani uchun async ko'rishida saveArticleData methodini yaratib oldim
     async getChosenArticleData(member, art_id) { // unga 2 parametrni path qilyabman.
