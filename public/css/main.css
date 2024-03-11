@@ -1,0 +1,26 @@
+html,
+body {
+    height: 100%;
+}
+#main_container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #2c261e;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: #2c261e;
+}
+
+.nav-item a {
+    color: #E3C08D;
+}
+
+.nav-item disabled {
+    color: #898071;
+}

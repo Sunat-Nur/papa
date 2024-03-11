@@ -1,5 +1,5 @@
 function getCompute(arr) {
-    if (arr.lenght === 0) {
+    if (arr.length === 0) {
         return arr;
     }
     const firstItem = arr[0];
@@ -8,5 +8,5 @@ function getCompute(arr) {
     return arr;
 }
 const inputArray = ['h','e','l','l','o'];
-const result = getCompute(inputArray);
+let result = getCompute(inputArray);
 console.log(result);
