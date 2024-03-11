@@ -1,0 +1,25 @@
+version: "1.1"
+
+services:
+  node:
+    container_name: papay_backend
+    restart: always
+    image: node:16.10.0
+    ports:
+      - 3002:3002
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+
+    networks:
+      - papay_network
+
+    #PRODUCTION
+    command: bash -c "npm install && npm run production"
+
+    #DEVELOPMENT
+    #command: bash -c "npm install && npm run dev
+
+networks:
+  papay_network:
+    driver: bridge
