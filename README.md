@@ -18,11 +18,11 @@
 
 . 회원가입 로그인
 
-. 커뮤니티 chatting
-
 . 포스트 페이지 생셍
 
 . 댓글과 투표기능
+
+. swiper 모듈을 이용한 터치 슬라이드
 
 . 무한스크롤
 
@@ -36,46 +36,33 @@
 ---------------
 
 
-docker
-------
-도커를 이용한 Postgres  실행
 
 
-typeorm
----------------
-
-. 개체와 관계형 데이터베이스의 데이터 연결
-
-. 엔티티 생성하여 클래슬를 데이터베이스 테이블로 변환
-
-. BaseEntity 생성하여 각 엔티티에 상속
-
-. Class Transformer로 Expose Exclude
-
-
-nextjs
----------------
-
-. next/route
-
-. reack hooks
-
-. 상태관리 context api
-
-. express
-
-
-
-Typescript
+JavaScript
 ---------------
 
 . object data에 타입을 체크하기 위해 interface 사용
 
 
+Nodejs
+---------------
+
+. Express
+
+. 상태관리 context api
+
+
+Ejs
+---------------
+
+. Ejs6 문법
+
+
+
 외부
 ---------------
 
-. Tailwind css
+. CSS / HTML
 
 . bcryptjs
 
@@ -101,6 +88,8 @@ Typescript
 
 . 캐시 된 데이터를 갱신 mutate
 
+. Multer 파일업로드
+
 
 
 AWS
@@ -109,6 +98,11 @@ AWS
 . EC2 배포
 
 . 환경에 따른 env-cmd
+
+
+MongoDB
+---------------
+. moongose atlas
 
 
 
