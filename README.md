@@ -45,8 +45,11 @@ typeorm
 ---------------
 
 . 개체와 관계형 데이터베이스의 데이터 연결
+
 . 엔티티 생성하여 클래슬를 데이터베이스 테이블로 변환
+
 . BaseEntity 생성하여 각 엔티티에 상속
+
 . Class Transformer로 Expose Exclude
 
 
@@ -54,8 +57,11 @@ nextjs
 ---------------
 
 . next/route
+
 . reack hooks
+
 . 상태관리 context api
+
 . express
 
 
@@ -70,9 +76,13 @@ Typescript
 ---------------
 
 . Tailwind css
+
 . bcryptjs
+
 . class-validator
+
 . class-transformer
+
 . dayjs
 
 
