@@ -1,4 +1,4 @@
-version: "1.1"
+version: "3.3"
 
 services:
   node:
@@ -15,7 +15,7 @@ services:
       - papay_network
 
     #PRODUCTION
-    command: bash -c "npm install && npm run production"
+    command: bash -c "npm install && npm run start:prod"
 
     #DEVELOPMENT
     #command: bash -c "npm install && npm run dev
