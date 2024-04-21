@@ -18,6 +18,7 @@
     "anime": "^0.1.2",
     "assert": "^2.0.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "connect-mongodb-session": "^3.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
