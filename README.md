@@ -64,10 +64,10 @@ typeorm
 . Class Transformer로 Expose Exclude
 
 
-nextjs
+nodejs
 ---------------
 
-. next/route
+. node/route
 
 . reack hooks
 
